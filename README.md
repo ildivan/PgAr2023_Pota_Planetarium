@@ -1,2 +1,2 @@
-# planetarium.Planetarium
+# Planetarium
 Secondo compito del progetto arnaldo.
