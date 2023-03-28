@@ -16,7 +16,7 @@ abstract class CelestialBody{
         updateCounter();
     }
 
-    CelestialBody(long x, long y, long mass) {
+    CelestialBody(double x, double y, long mass) {
         this.position = new Position(x,y);
         this.mass = mass;
         identifier = counter;
@@ -24,8 +24,10 @@ abstract class CelestialBody{
     }
 
     public Position getRelativePosition() {
-        return position;
+        return new Position(position.getX(),position.getY());
     }
+
+    public abstract Position getPosition();
 
     public long getMass() {
         return mass;

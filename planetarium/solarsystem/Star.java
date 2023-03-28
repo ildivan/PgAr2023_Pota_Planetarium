@@ -9,12 +9,17 @@ class Star extends CelestialBody{
 
     Star(Position starPosition, long starMass) {
         super(starPosition, starMass);
-        planets = new ArrayList<Planet>();
+        planets = new ArrayList<>();
     }
 
-    Star(long x, long y, long starMass) {
+    Star(double x, double y, long starMass) {
         super(x, y, starMass);
-        planets = new ArrayList<Planet>();
+        planets = new ArrayList<>();
+    }
+
+    @Override
+    public Position getPosition() {
+        return getRelativePosition();
     }
 
     public List<Planet> getPlanets() {

@@ -1,27 +1,42 @@
 package planetarium.solarsystem;
 
 public class Position {
-    private long x;
-    private long y;
+    private double x;
+    private double y;
 
-    public Position(long x, long y) {
+    public Position(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    public long getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(long x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public long getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(long y) {
+    public void setY(double y) {
         this.y = y;
+    }
+
+    public void increaseX(double amount) {setX(getX() + amount);}
+    public void increaseY(double amount) {setY(getY() + amount);}
+
+    public Position increase(Position amount) {
+        increaseX(amount.getX());
+        increaseY(amount.getY());
+        return this;
+    }
+
+    public Position multiplyBy(double amount){
+        setX(getX()*amount);
+        setY(getY()*amount);
+        return this;
     }
 }

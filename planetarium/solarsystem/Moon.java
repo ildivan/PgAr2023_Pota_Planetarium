@@ -8,9 +8,15 @@ class Moon extends CelestialBody{
         this.planet = planet;
     }
 
-    Moon(long x, long y,long moonMass, Planet planet){
+    Moon(double x, double y,long moonMass, Planet planet){
         super(new Position(x,y),moonMass);
         this.planet = planet;
+    }
+
+    public Position getPosition() {
+        Position absolutePosition = getRelativePosition();
+        absolutePosition.increase(getPlanet().getPosition());
+        return absolutePosition;
     }
 
     private Planet getPlanet() {

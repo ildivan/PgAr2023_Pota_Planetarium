@@ -14,7 +14,7 @@ class Planet extends CelestialBody{
         moons = new ArrayList<>();
     }
 
-    Planet(long x, long y, long planetMass, Star star){
+    Planet(double x, double y, long planetMass, Star star){
         super(new Position(x,y),planetMass);
         this.star = star;
         moons = new ArrayList<>();
@@ -22,6 +22,13 @@ class Planet extends CelestialBody{
 
     private Star getStar() {
         return star;
+    }
+
+    @Override
+    public Position getPosition() {
+        Position absolutePosition = getRelativePosition();
+        absolutePosition.increase(getStar().getPosition());
+        return absolutePosition;
     }
 
     public List<Moon> getMoons() {
