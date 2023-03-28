@@ -1,4 +1,4 @@
-package planetarium;
+package planetarium.solarsystem;
 
 public class Position {
     private long x;
