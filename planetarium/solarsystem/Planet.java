@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class Planet extends CelestialBody{
+public class Planet extends CelestialBody{
     private final Star star;
     private final List<Moon> moons;
 
@@ -32,7 +32,7 @@ class Planet extends CelestialBody{
     }
 
     public List<Moon> getMoons() {
-        return Collections.unmodifiableList(moons);
+        return moons;
     }
 
     public void addNewMoon(Position moonRelativePosition,long moonMass){

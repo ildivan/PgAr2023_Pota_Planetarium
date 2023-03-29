@@ -1,6 +1,6 @@
 package planetarium.solarsystem;
 
-class Moon extends CelestialBody{
+public class Moon extends CelestialBody{
     private final Planet planet;
 
     Moon(Position moonPosition,long moonMass, Planet planet){

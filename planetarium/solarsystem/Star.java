@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class Star extends CelestialBody{
+public class Star extends CelestialBody{
     private final List<Planet> planets;
 
     Star(Position starPosition, long starMass) {
@@ -23,7 +23,7 @@ class Star extends CelestialBody{
     }
 
     public List<Planet> getPlanets() {
-        return Collections.unmodifiableList(planets);
+        return planets;
     }
 
     public void addNewPlanet(Position planetRelativePosition, long mass){

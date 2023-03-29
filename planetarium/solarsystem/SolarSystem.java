@@ -19,12 +19,12 @@ public class SolarSystem {
         final long systemMass = getSystemTotalMass();
         final Position centerOfMass = new Position(0,0);
 
-        //Multiply star coordinates by its mass
+        // Add weighted position of the Star
         final double starMass = getStar().getMass();
         final Position adjustedStarPosition = getStar().getPosition().multiplyBy(starMass);
         centerOfMass.increase(adjustedStarPosition);
 
-        //Multiply planets coordinates by their mass
+        // Add weighted positions of the Planets
         final var planets = getStar().getPlanets();
         for(final var planet : planets){
             final double planetMass = planet.getMass();
@@ -32,7 +32,7 @@ public class SolarSystem {
             centerOfMass.increase(adjustedPlanetPosition);
 
             final var moons = planet.getMoons();
-            //Multiply moons coordinates by their mass
+            // Add weighted positions of the Moons
             for(final var moon : moons){
                 final double moonMass = moon.getMass();
                 final Position adjustedMoonPosition = moon.getPosition().multiplyBy(moonMass);
