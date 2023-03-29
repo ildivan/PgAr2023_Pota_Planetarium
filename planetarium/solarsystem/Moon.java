@@ -1,7 +1,7 @@
 package planetarium.solarsystem;
 
 public class Moon extends CelestialBody{
-    private final Planet planet;
+    private Planet planet;
 
     Moon(Position moonPosition,long moonMass, Planet planet){
         super(moonPosition,moonMass);
@@ -21,5 +21,10 @@ public class Moon extends CelestialBody{
 
     private Planet getPlanet() {
         return planet;
+    }
+
+    public void removeFromSystem(){
+        planet.removeOldMoon(this);
+        planet = null;
     }
 }

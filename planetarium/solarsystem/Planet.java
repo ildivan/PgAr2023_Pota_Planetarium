@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Planet extends CelestialBody{
-    private final Star star;
+    private Star star;
     private final List<Moon> moons;
 
     public static final int MAX_NUMBER_OF_MOONS = 5000;
@@ -55,6 +55,23 @@ public class Planet extends CelestialBody{
     public void addNewMoon(long relativeX, long relativeY,long moonMass){
         if(moons.size() < MAX_NUMBER_OF_MOONS){
             moons.add(new Moon(relativeX,relativeY,moonMass,this));
+
         }
+    }
+
+    void removeOldMoon(Moon moonToDelete){
+        moons.remove(moonToDelete);
+    }
+
+    public void removeOldMoon(int identifier){
+        Moon moonToDelete = findMoon(identifier);
+        if(moonToDelete != null){
+            moonToDelete.removeFromSystem();
+        }
+    }
+
+    public void removeFromSystem() {
+        star.removeOldPlanet(this);
+        star = null;
     }
 }

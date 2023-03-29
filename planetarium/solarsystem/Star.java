@@ -48,4 +48,15 @@ public class Star extends CelestialBody{
             planets.add(new Planet(relativeX,relativeY,mass,this));
         }
     }
+
+    void removeOldPlanet(Planet planetToRemove){
+        planets.remove(planetToRemove);
+    }
+
+    public void removeOldPlanet(int identifier){
+        Planet planetToRemove = findPlanet(identifier);
+        if(planetToRemove != null){
+            planetToRemove.removeFromSystem();
+        }
+    }
 }

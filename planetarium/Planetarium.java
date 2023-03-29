@@ -12,13 +12,11 @@ public class Planetarium {
         }
 
         for(var planet : star.getPlanets()){
-            System.out.println(planet.toString());
             for (int i = 0; i < 1000; i++) {
                 planet.addNewMoon(i,i,i);
             }
-            for(var moon : planet.getMoons()){
-                System.out.println(moon.toString());
-            }
         }
+
+        star.findPlanet(2).removeFromSystem();
     }
 }
