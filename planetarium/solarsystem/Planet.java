@@ -35,6 +35,15 @@ public class Planet extends CelestialBody{
         return moons;
     }
 
+    public Moon findMoon(int identifier){
+        for(var moon : getMoons()){
+            if(identifier == moon.getIdentifier()){
+                return moon;
+            }
+        }
+        return null;
+    }
+
     public void addNewMoon(Position moonRelativePosition,long moonMass){
         moons.add(new Moon(moonRelativePosition,moonMass,this));
     }

@@ -66,4 +66,19 @@ public class SolarSystem {
 
         return totalMass;
     }
+    
+    public CelestialBody findCelestialBody(int identifier){
+        var star = getStar();
+        if(identifier == star.getIdentifier()) return star;
+
+        var searchedPlanet = star.findPlanet(identifier);
+        if(searchedPlanet != null) return searchedPlanet;
+
+        for(var planet : star.getPlanets()){
+            var searchedMoon = planet.findMoon(identifier);
+            if(searchedMoon != null) return searchedMoon;
+        }
+
+        return null;
+    }
 }

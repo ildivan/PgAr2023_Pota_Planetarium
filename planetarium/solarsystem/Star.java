@@ -26,6 +26,15 @@ public class Star extends CelestialBody{
         return planets;
     }
 
+    public Planet findPlanet(int identifier){
+        for(var planet : getPlanets()){
+            if(identifier == planet.getIdentifier()){
+                return planet;
+            }
+        }
+        return null;
+    }
+
     public void addNewPlanet(Position planetRelativePosition, long mass){
         planets.add(new Planet(planetRelativePosition,mass,this));
     }
