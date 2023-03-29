@@ -66,7 +66,7 @@ public class SolarSystem {
 
         return totalMass;
     }
-    
+
     public CelestialBody findCelestialBody(int identifier){
         var star = getStar();
         if(identifier == star.getIdentifier()) return star;

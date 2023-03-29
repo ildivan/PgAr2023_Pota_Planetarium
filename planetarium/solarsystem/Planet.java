@@ -8,6 +8,8 @@ public class Planet extends CelestialBody{
     private final Star star;
     private final List<Moon> moons;
 
+    public static final int MAX_NUMBER_OF_MOONS = 5000;
+
     Planet(Position planetPosition, long planetMass, Star star){
         super(planetPosition,planetMass);
         this.star = star;
@@ -45,10 +47,14 @@ public class Planet extends CelestialBody{
     }
 
     public void addNewMoon(Position moonRelativePosition,long moonMass){
-        moons.add(new Moon(moonRelativePosition,moonMass,this));
+        if(moons.size() < MAX_NUMBER_OF_MOONS){
+            moons.add(new Moon(moonRelativePosition,moonMass,this));
+        }
     }
 
     public void addNewMoon(long relativeX, long relativeY,long moonMass){
-        moons.add(new Moon(relativeX,relativeY,moonMass,this));
+        if(moons.size() < MAX_NUMBER_OF_MOONS){
+            moons.add(new Moon(relativeX,relativeY,moonMass,this));
+        }
     }
 }

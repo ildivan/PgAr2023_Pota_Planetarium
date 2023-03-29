@@ -7,6 +7,8 @@ import java.util.List;
 public class Star extends CelestialBody{
     private final List<Planet> planets;
 
+    public static final int MAX_NUMBER_OF_PLANETS = 26000;
+
     Star(Position starPosition, long starMass) {
         super(starPosition, starMass);
         planets = new ArrayList<>();
@@ -36,11 +38,14 @@ public class Star extends CelestialBody{
     }
 
     public void addNewPlanet(Position planetRelativePosition, long mass){
-        planets.add(new Planet(planetRelativePosition,mass,this));
+        if(planets.size() < MAX_NUMBER_OF_PLANETS){
+            planets.add(new Planet(planetRelativePosition,mass,this));
+        }
     }
 
     public void addNewPlanet(long relativeX, long relativeY, long mass){
-        planets.add(new Planet(relativeX,relativeY,mass,this));
+        if(planets.size() < MAX_NUMBER_OF_PLANETS){
+            planets.add(new Planet(relativeX,relativeY,mass,this));
+        }
     }
-
 }
