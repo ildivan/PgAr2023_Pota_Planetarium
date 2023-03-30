@@ -7,8 +7,6 @@ abstract class CelestialBody{
     private static int counter = 1;
 
 
-
-
     CelestialBody(Position position, long mass) {
         this.position = position;
         this.mass = mass;
@@ -51,6 +49,6 @@ abstract class CelestialBody{
                 getMass() +
                 "Mkg position: " +
                 getPosition() +
-                ")";
+                ")]";
     }
 }
