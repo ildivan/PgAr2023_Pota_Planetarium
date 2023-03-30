@@ -39,4 +39,9 @@ public class Position {
         setY(getY()*amount);
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "( " + getX() + " , " + getY() + " )";
+    }
 }

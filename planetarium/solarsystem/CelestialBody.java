@@ -41,4 +41,16 @@ abstract class CelestialBody{
         counter++;
     }
 
+    @Override
+    public String toString() {
+        String className = getClass().getSimpleName();
+
+        return "[ " + className + " " +
+                getIdentifier() +
+                "\tmass: " +
+                getMass() +
+                "Mkg position: " +
+                getPosition() +
+                ")";
+    }
 }
