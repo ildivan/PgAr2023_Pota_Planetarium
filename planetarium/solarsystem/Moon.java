@@ -27,4 +27,10 @@ public class Moon extends CelestialBody{
         planet.removeOldMoon(this);
         planet = null;
     }
+
+    public double distanceToPlanet(){
+        Position relative = getRelativePosition();
+
+        return Math.sqrt(Math.pow(relative.getX(),2) + Math.pow(relative.getY(), 2));
+    }
 }

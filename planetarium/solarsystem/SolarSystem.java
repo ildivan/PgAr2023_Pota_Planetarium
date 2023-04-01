@@ -1,5 +1,8 @@
 package planetarium.solarsystem;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class SolarSystem {
     private final Star star;
 
@@ -80,5 +83,112 @@ public class SolarSystem {
         }
 
         return null;
+    }
+
+    //Checks for all types of possible collisions in the system, return true if found.
+    public boolean detectCollisions(){
+        return checkCollisionBetweenPlanets() || checkCollisionsSamePlanetMoons()
+                || checkCollisionStarAndMoons() || checkCollisionDifferentPlanetMoons()
+                || checkCollisionPlanetsAndMoons();
+    }
+
+    //Check collisions between planets
+    private boolean checkCollisionBetweenPlanets(){
+        var planets = getStar().getPlanets();
+        var distancesFromStar = new ArrayList<Double>();
+
+        for(var planet : planets){
+            double distance = planet.distanceToStar();
+            if(distancesFromStar.contains(distance)){
+                return true;
+            }
+            distancesFromStar.add(distance);
+        }
+        return false;
+    }
+
+    //Check collisions between moons of the same planet
+    private boolean checkCollisionsSamePlanetMoons(){
+        var planets = getStar().getPlanets();
+
+        for(var planet : planets){
+            var moons = planet.getMoons();
+            var distancesFromPlanet = new ArrayList<Double>();
+            for(var moon : moons){
+                double distance = moon.distanceToPlanet();
+                if(distancesFromPlanet.contains(distance)){
+                    return true;
+                }
+                distancesFromPlanet.add(distance);
+            }
+        }
+
+        return false;
+    }
+
+    //Check collisions of moons with the star
+    private boolean checkCollisionStarAndMoons(){
+        var planets = getStar().getPlanets();
+
+        for(var planet : planets){
+            var moons = planet.getMoons();
+            for(var moon : moons){
+                if(planet.distanceToStar() == moon.distanceToPlanet()){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //Check collisions within moons of different planets
+    private boolean checkCollisionDifferentPlanetMoons() {
+        var planets = getStar().getPlanets();
+
+        for (int i = 0; i < planets.size(); i++) {
+            for (int j = i+1; j < planets.size(); j++) {
+                Planet first = planets.get(i);
+                Planet second = planets.get(j);
+
+                var firstMoons = first.getMoons();
+                var secondMoons = second.getMoons();
+
+                for (int k = 0; k < firstMoons.size(); k++) {
+                    for (int l = k+1; l < firstMoons.size(); l++) {
+                        double planetRadiusDifference = Math.abs(first.distanceToStar()-second.distanceToStar());
+                        Moon firstMoon = firstMoons.get(i);
+                        Moon secondMoon = secondMoons.get(j);
+                        if(firstMoon.distanceToPlanet() + secondMoon.distanceToPlanet() >= planetRadiusDifference){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    //Checks collisions within planets and moons of other planets
+    private boolean checkCollisionPlanetsAndMoons(){
+        var planets = getStar().getPlanets();
+
+        for (int i = 0; i < planets.size(); i++) {
+            for (int j = i+1; j < planets.size(); j++) {
+                var planet = planets.get(i);
+                var nextPlanet = planets.get(j);
+                var moons = nextPlanet.getMoons();
+
+                double planetRadiusDifference = Math.abs(planet.distanceToStar()-nextPlanet.distanceToStar());
+
+                for(var moon : moons){
+                    if(moon.distanceToPlanet() == planetRadiusDifference){
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }

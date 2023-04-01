@@ -73,4 +73,11 @@ public class Planet extends CelestialBody{
         star.removeOldPlanet(this);
         star = null;
     }
+
+    public double distanceToStar(){
+        Position relative = getRelativePosition();
+        return Math.sqrt( Math.pow(relative.getX(),2)+Math.pow(relative.getY(),2) );
+    }
+
+
 }
