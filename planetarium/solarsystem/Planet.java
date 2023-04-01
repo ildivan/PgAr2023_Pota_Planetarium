@@ -80,4 +80,5 @@ public class Planet extends CelestialBody{
         return Math.sqrt( Math.pow(relative.getX(),2)+Math.pow(relative.getY(),2) );
     }
 
+
 }
