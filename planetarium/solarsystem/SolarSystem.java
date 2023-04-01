@@ -1,5 +1,8 @@
 package planetarium.solarsystem;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class SolarSystem {
     private final Star star;
 
@@ -80,5 +83,35 @@ public class SolarSystem {
         }
 
         return null;
+    }
+
+    public boolean detectCollisions(){
+        var planets = getStar().getPlanets();
+        var distancesFromStar = new ArrayList<Double>();
+        //Check collisions between planets
+        for(var planet : planets){
+            double distance = planet.distanceToStar();
+            if(distancesFromStar.contains(distance)){
+                return true;
+            }
+            distancesFromStar.add(distance);
+        }
+
+        //Check collisions between moons of the same planet
+        for(var planet : planets){
+            var moons = planet.getMoons();
+            var distancesFromPlanet = new ArrayList<Double>();
+            for(var moon : moons){
+                double distance = moon.distanceToPlanet();
+                if(distancesFromPlanet.contains(distance)){
+                    return true;
+                }
+                distancesFromPlanet.add(distance);
+            }
+        }
+
+        
+
+        return false;
     }
 }
