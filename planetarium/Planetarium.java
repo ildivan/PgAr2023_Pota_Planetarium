@@ -1,55 +1,29 @@
 package planetarium;
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
 import planetarium.solarsystem.SolarSystem;
+import planetarium.solarsystem.Star;
 
 public class Planetarium {
 
-	private static final String DIGITA_NUMERO_OPZIONE_DESIDERATA = "\nDigita il numero dell'opzione desiderata > ";
-
-	private static void welcome() {
-		System.out.println("\n"
-						+ "\t██████╗░██╗░░░░░░█████╗░███╗░░██╗███████╗████████╗░█████╗░██████╗░██╗██╗░░░██╗███╗░░░███╗\n"
-						+ "\t██╔══██╗██║░░░░░██╔══██╗████╗░██║██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██║██║░░░██║████╗░████║\n"
-						+ "\t██████╔╝██║░░░░░███████║██╔██╗██║█████╗░░░░░██║░░░███████║██████╔╝██║██║░░░██║██╔████╔██║\n"
-						+ "\t██╔═══╝░██║░░░░░██╔══██║██║╚████║██╔══╝░░░░░██║░░░██╔══██║██╔══██╗██║██║░░░██║██║╚██╔╝██║\n"
-						+ "\t██║░░░░░███████╗██║░░██║██║░╚███║███████╗░░░██║░░░██║░░██║██║░░██║██║╚██████╔╝██║░╚═╝░██║\n"
-						+ "\t╚═╝░░░░░╚══════╝╚═╝░░╚═╝╚═╝░░╚══╝╚══════╝░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░╚═════╝░╚═╝░░░░░╚═╝");
-		System.out.println("\nBenvenuto al gestionale degli Xylophaxians");
-	}
-
-	private static byte scelta() {
-		byte scelta;
-		do {
-			System.out.print(DIGITA_NUMERO_OPZIONE_DESIDERATA);
-			try {
-				Scanner scanner = new Scanner(System.in);
-				scelta = scanner.nextByte();
-				return scelta;
-			} catch (InputMismatchException e) {
-				System.out.println("Attenzione: il dato inserito non e' nel formato corretto");
-			}
-		} while (true);
-	}
+	private static final String INVALID_NUMBER = "ATTENZIONE: Il numero inserito non e' valido!";
 
 	public static void main(String[] args) {
-		var system = new SolarSystem(0, 0, 3);
-		var star = system.getStar();
+		
+		SolarSystem system = new SolarSystem(0, 0, 3);
+		Star star = system.getStar();
 
-		welcome();
-		Menu.printMainMenu();
+		Menu.welcome();
 
-		byte scelta;
+		byte choice;
 		do {
-			scelta = scelta();
-			switch (scelta) {
+			Menu.printMainMenu();
+			choice = Input.choice();
+			switch (choice) {
 			case 1:
-				addCelestialBody();
+				addCelestialBody(star);
 				break;
 			case 2:
-				removeCelestialBody();
+				removeCelestialBody(star);
 				break;
 			case 3:
 				infoCelestialBody();
@@ -67,32 +41,88 @@ public class Planetarium {
 				showCollisions();
 				break;
 			case 8:
-				continue;
+				return;
 			default:
-				System.out.println("ATTENZIONE: Il numero inserito non e' valido!");
+				System.out.println(INVALID_NUMBER);
 				break;
 			}
-		} while (scelta != 8);
-
-		for (int i = 0; i < 1000; i++) {
-			star.addNewPlanet(i, i, i);
-		}
-
-		for (var planet : star.getPlanets()) {
-			for (int i = 0; i < 1000; i++) {
-				planet.addNewMoon(i, i, i);
-			}
-		}
-
-		star.findPlanet(2).removeFromSystem();
+		} while (true);
 	}
 
-	private static void addCelestialBody() {
+	private static void addCelestialBody(Star star) {
 		Menu.printAddCelestialBodyMenu();
+		byte scelta;
+		do {
+			scelta = Input.choice();
+			switch (scelta) {
+			case 1:
+				addPlanet(star);
+				return;
+			case 2:
+				addMoon(star);
+				return;
+			case 3:
+				return;
+			default:
+				System.out.println(INVALID_NUMBER);
+				break;
+			}
+		} while (true);
 	}
 
-	private static void removeCelestialBody() {
+	private static void addPlanet(Star star) {
+		System.out.print("Inserire coordinate X del pianeta: ");
+		long x = Input.readLong();
+		System.out.print("\nInserire coordinate Y del pianeta: ");
+		long y = Input.readLong();
+		System.out.print("\nInserire la massa del pianeta [Kg]: ");
+		long massa = Input.readLong();
+		star.addNewPlanet(x, y, massa);
+	}
+
+	private static void addMoon(Star star) {
+		System.out.print("Inserire ID del pianeta della luna: ");
+		int id = Input.readInt();
+		System.out.print("Inserire coordinate X della luna: ");
+		long x = Input.readLong();
+		System.out.print("\nInserire coordinate Y della luna: ");
+		long y = Input.readLong();
+		System.out.print("\nInserire la massa della luna [Kg]: ");
+		long mass = Input.readLong();
+		// To-Do: creare nuovo oggetto luna
+	}
+
+	private static void removeCelestialBody(Star star) {
 		Menu.printRemoveCelestialBodyMenu();
+		byte choice;
+		do {
+			choice = Input.choice();
+			switch (choice) {
+			case 1:
+				removePlanet(star);
+				return;
+			case 2:
+				removeMoon(star);
+				return;
+			case 3:
+				return;
+			default:
+				System.out.println(INVALID_NUMBER);
+				break;
+			}
+		} while (true);
+	}
+
+	private static void removePlanet(Star star) {
+		System.out.print("Inserire ID del pianeta da rimuovere: ");
+		int id = Input.readInt();
+		star.removeOldPlanet(id);
+	}
+
+	private static void removeMoon(Star star) {
+		System.out.print("Inserire ID della luna da rimuovere: ");
+		int id = Input.readInt();
+		// To-Do: rimuovere oggetto luna
 	}
 
 	private static void infoCelestialBody() {
