@@ -19,60 +19,46 @@ public class Planetarium {
 			Menu.printMainMenu();
 			choice = Input.choice();
 			switch (choice) {
-			case 1:
-				addCelestialBody(star);
-				break;
-			case 2:
-				removeCelestialBody(star);
-				break;
-			case 3:
-				infoCelestialBody();
-				break;
-			case 4:
-				showListCelestialBodies();
-				break;
-			case 5:
-				getCenterOfMass();
-				break;
-			case 6:
-				calculateRoute();
-				break;
-			case 7:
-				showCollisions();
-				break;
-			case 8:
-				return;
-			default:
-				System.out.println(INVALID_NUMBER);
-				break;
+				case 1 -> addCelestialBody(star);
+				case 2 -> removeCelestialBody(star);
+				case 3 -> infoCelestialBody();
+				case 4 -> showListCelestialBodies();
+				case 5 -> getCenterOfMass();
+				case 6 -> calculateRoute();
+				case 7 -> showCollisions();
+				case 8 -> {
+					return;
+				}
+				default -> System.out.println(INVALID_NUMBER);
 			}
 		} while (true);
 	}
 
 	private static void addCelestialBody(Star star) {
-		boolean emptyPlanets = star.getPlanets().isEmpty() ? true : false;
+		boolean emptyPlanets = star.getPlanets().isEmpty();
 		Menu.printAddCelestialBodyMenu(emptyPlanets);
 		byte scelta;
 		do {
 			scelta = Input.choice();
 			switch (scelta) {
-			case 1:
-				addPlanet(star);
-				return;
-			case 2:
-				if (emptyPlanets)
+				case 1 -> {
+					addPlanet(star);
 					return;
-				addMoon(star);
-				return;
-			case 3:
-				if (emptyPlanets) {
-					System.out.println(INVALID_NUMBER);
-					break;
 				}
-				return;
-			default:
-				System.out.println(INVALID_NUMBER);
-				break;
+				case 2 -> {
+					if (emptyPlanets)
+						return;
+					addMoon(star);
+					return;
+				}
+				case 3 -> {
+					if (emptyPlanets) {
+						System.out.println(INVALID_NUMBER);
+						break;
+					}
+					return;
+				}
+				default -> System.out.println(INVALID_NUMBER);
 			}
 		} while (true);
 	}
@@ -105,17 +91,18 @@ public class Planetarium {
 		do {
 			choice = Input.choice();
 			switch (choice) {
-			case 1:
-				removePlanet(star);
-				return;
-			case 2:
-				removeMoon(star);
-				return;
-			case 3:
-				return;
-			default:
-				System.out.println(INVALID_NUMBER);
-				break;
+				case 1 -> {
+					removePlanet(star);
+					return;
+				}
+				case 2 -> {
+					removeMoon(star);
+					return;
+				}
+				case 3 -> {
+					return;
+				}
+				default -> System.out.println(INVALID_NUMBER);
 			}
 		} while (true);
 	}
