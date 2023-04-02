@@ -50,7 +50,8 @@ public class Planetarium {
 	}
 
 	private static void addCelestialBody(Star star) {
-		Menu.printAddCelestialBodyMenu();
+		boolean emptyPlanets = star.getPlanets().isEmpty() ? true : false;
+		Menu.printAddCelestialBodyMenu(emptyPlanets);
 		byte scelta;
 		do {
 			scelta = Input.choice();
@@ -59,9 +60,15 @@ public class Planetarium {
 				addPlanet(star);
 				return;
 			case 2:
+				if (emptyPlanets)
+					return;
 				addMoon(star);
 				return;
 			case 3:
+				if (emptyPlanets) {
+					System.out.println(INVALID_NUMBER);
+					break;
+				}
 				return;
 			default:
 				System.out.println(INVALID_NUMBER);
