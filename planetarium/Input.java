@@ -49,4 +49,16 @@ public class Input {
 			}
 		} while (true);
 	}
+
+	public static String readString() {
+		String input;
+		do {
+			try {
+				input = scanner.next().replaceAll(" ", "");
+				return input;
+			} catch (InputMismatchException e) {
+				System.out.println(INPUT_INVALID_FORMAT);
+			}
+		} while (true);
+	}
 }

@@ -4,13 +4,12 @@ public class Moon extends CelestialBody{
     private Planet planet;
 
     Moon(Position moonPosition,long moonMass, Planet planet){
-        super(moonPosition,moonMass);
+        super(moonPosition, moonMass, planet.getIdentifier() + "M" + (planet.getNumberOfMoons() + 1));
         this.planet = planet;
     }
 
     Moon(double x, double y,long moonMass, Planet planet){
-        super(new Position(x,y),moonMass);
-        this.planet = planet;
+        this(new Position(x,y),moonMass,planet);
     }
 
     @Override

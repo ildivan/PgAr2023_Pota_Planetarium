@@ -1,7 +1,6 @@
 package planetarium.solarsystem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class SolarSystem {
     private final Star star;
@@ -70,7 +69,7 @@ public class SolarSystem {
         return totalMass;
     }
 
-    public CelestialBody findCelestialBody(int identifier){
+    public CelestialBody findCelestialBody(String identifier){
         var star = getStar();
         if(identifier == star.getIdentifier()) return star;
 

@@ -1,24 +1,20 @@
 package planetarium.solarsystem;
 
-abstract class CelestialBody{
-    private final int identifier;
+public abstract class CelestialBody{
+    private final String identifier;
     private final Position position;
     private final long mass;
-    private static int counter = 1;
 
-
-    CelestialBody(Position position, long mass) {
+    CelestialBody(Position position, long mass, String identifier) {
         this.position = position;
         this.mass = mass;
-        identifier = counter;
-        updateCounter();
+        this.identifier = identifier;
     }
 
-    CelestialBody(double x, double y, long mass) {
+    CelestialBody(double x, double y, long mass, String identifier) {
         this.position = new Position(x,y);
         this.mass = mass;
-        identifier = counter;
-        updateCounter();
+        this.identifier = identifier;
     }
 
     public Position getRelativePosition() {
@@ -31,12 +27,8 @@ abstract class CelestialBody{
         return mass;
     }
 
-    public int getIdentifier() {
+    public String getIdentifier() {
         return identifier;
-    }
-
-    private void updateCounter(){
-        counter++;
     }
 
     @Override
