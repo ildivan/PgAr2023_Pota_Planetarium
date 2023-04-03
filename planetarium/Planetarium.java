@@ -74,15 +74,22 @@ public class Planetarium {
 	}
 
 	private static void addMoon(Star star) {
-		System.out.print("Inserire ID del pianeta della luna: ");
-		int id = Input.readInt();
+		int id;
+		while(true){
+			System.out.print("Inserire ID del pianeta della luna: ");
+			id = Input.readInt();
+
+			if(star.findPlanet(id) != null) break;
+			System.out.println("Pianeta non trovato.");
+		}
+
 		System.out.print("Inserire coordinate X della luna: ");
 		long x = Input.readLong();
 		System.out.print("\nInserire coordinate Y della luna: ");
 		long y = Input.readLong();
 		System.out.print("\nInserire la massa della luna [Kg]: ");
 		long mass = Input.readLong();
-		// To-Do: creare nuovo oggetto luna
+		star.findPlanet(id).addNewMoon(x,y,mass);
 	}
 
 	private static void removeCelestialBody(Star star) {

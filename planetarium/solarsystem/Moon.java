@@ -13,6 +13,7 @@ public class Moon extends CelestialBody{
         this.planet = planet;
     }
 
+    @Override
     public Position getPosition() {
         Position absolutePosition = getRelativePosition();
         absolutePosition.increase(getPlanet().getPosition());

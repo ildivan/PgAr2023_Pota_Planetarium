@@ -29,12 +29,12 @@ public class Menu {
 	protected static void printAddCelestialBodyMenu(boolean emptyPlanets) {
 		System.out.println(FRAME);
 		System.out.println("	" + 1 + ". Aggiungi nuovo Pianeta");
-		if (!emptyPlanets) {
-			System.out.println("	" + 2 + ". Aggiungi nuova Luna");
-			System.out.println("	" + 3 + ". Esci");
+		if (emptyPlanets) {
+			System.out.println("	" + 2 + ". Esci");
 			return;
 		}
-		System.out.println("	" + 2 + ". Esci");
+		System.out.println("	" + 2 + ". Aggiungi nuova Luna");
+		System.out.println("	" + 3 + ". Esci");
 	}
 
 	protected static void printRemoveCelestialBodyMenu() {
