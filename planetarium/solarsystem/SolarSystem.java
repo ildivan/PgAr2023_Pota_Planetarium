@@ -8,10 +8,6 @@ import java.util.ArrayList;
 
 public class SolarSystem {
 
-    /**
-     * The star of the solar system.
-     * @see Star
-     */
     private final Star star;
 
 

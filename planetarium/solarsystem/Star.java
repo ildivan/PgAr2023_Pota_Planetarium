@@ -11,6 +11,7 @@ public class Star extends CelestialBody{
     
     public static final int MAX_NUMBER_OF_PLANETS = 26000;
 
+    //Package-private because it should be instantiated ONLY from a SolarSystem's constructor.
     Star(Position starPosition, long starMass) {
         super(starPosition, starMass, "S" + (numberOfStars + 1));
         planets = new ArrayList<>();
