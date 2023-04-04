@@ -70,7 +70,7 @@ public class Planetarium {
 		long x = Input.readLong();
 		System.out.print("Inserire coordinate Y del pianeta: ");
 		long y = Input.readLong();
-		System.out.print("Inserire la massa del pianeta [Kg]: ");
+		System.out.print("Inserire la massa del pianeta [MKg]: ");
 		long mass = Input.readLong();
 		star.addNewPlanet(x, y, mass);
 	}
@@ -92,7 +92,7 @@ public class Planetarium {
 		long x = Input.readLong();
 		System.out.print("Inserire coordinate Y della luna: ");
 		long y = Input.readLong();
-		System.out.print("Inserire la massa della luna [Kg]: ");
+		System.out.print("Inserire la massa della luna [MKg]: ");
 		long mass = Input.readLong();
 		star.findPlanet(id).addNewMoon(x,y,mass);
 	}
