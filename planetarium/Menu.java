@@ -29,18 +29,28 @@ public class Menu {
 
 	protected static void printAddCelestialBodyMenu(boolean emptyPlanets) {
 		System.out.println(FRAME);
-		System.out.println("	" + 1 + ". Aggiungi nuovo Pianeta");
+		System.out.println("	1. Aggiungi nuovo Pianeta");
 		if (emptyPlanets) {
-			System.out.println("	" + 2 + ". Esci");
+			System.out.println("	2. Esci");
 			return;
 		}
-		System.out.println("	" + 2 + ". Aggiungi nuova Luna");
-		System.out.println("	" + 3 + ". Esci");
+		System.out.println("	2. Aggiungi nuova Luna");
+		System.out.println("	3. Esci");
 	}
 
-	protected static void printRemoveCelestialBodyMenu() {
+	protected static void printRemoveCelestialBodyMenu(boolean emptyPlanets, boolean emptyMoons) {
 		System.out.println(FRAME);
+		if (emptyPlanets){
+			System.out.println("Hey, cosa stai cercando? Il sistema e' vuoto!");
+			pressEnterToContinue();
+			return;
+		}
+
 		System.out.println("	1. Rimuovi Pianeta");
+		if (emptyMoons) {
+			System.out.println("	2. Esci");
+			return;
+		}
 		System.out.println("	2. Rimuovi Luna");
 		System.out.println("	3. Esci");
 	}
@@ -52,5 +62,14 @@ public class Menu {
 			else
 				new ProcessBuilder("bash", "-c", "clear").inheritIO().start().waitFor();
 		} catch (Exception e) {}
+	}
+
+	protected static void pressEnterToContinue() {
+		System.out.print("\n\nPremi Invio per continuare...");
+		try {
+			System.in.read();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

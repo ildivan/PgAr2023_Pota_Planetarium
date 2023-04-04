@@ -10,10 +10,10 @@ public class Planetarium {
 		SolarSystem system = new SolarSystem(0, 0, 3);
 
 		Menu.clearConsole();
-		Menu.welcome();
 
 		byte choice;
 		do {
+			Menu.welcome();
 			Menu.printMainMenu();
 			choice = Input.choice();
 			switch (choice) {
@@ -98,8 +98,23 @@ public class Planetarium {
 	}
 
 	private static void removeCelestialBody(SolarSystem system) {
+		var planets = system.getStar().getPlanets();
+		boolean emptyPlanets = planets.isEmpty();
+		boolean emptyMoons = true;
+		
 		Menu.clearConsole();
-		Menu.printRemoveCelestialBodyMenu();
+
+		for (var planet : planets) {
+			if (!planet.getMoons().isEmpty()) {
+				emptyMoons = false;
+				break;
+			}
+		}
+		Menu.printRemoveCelestialBodyMenu(emptyPlanets, emptyMoons);
+		
+		if (emptyPlanets)
+			return;
+
 		byte choice;
 		do {
 			choice = Input.choice();
@@ -109,10 +124,16 @@ public class Planetarium {
 					return;
 				}
 				case 2 -> {
+					if (emptyMoons)
+						return;
 					removeMoon(system);
 					return;
 				}
 				case 3 -> {
+					if (emptyMoons) {
+						System.out.println(INVALID_NUMBER);
+						break;
+					}
 					return;
 				}
 				default -> System.out.println(INVALID_NUMBER);
@@ -180,12 +201,7 @@ public class Planetarium {
 			}
 		}
 
-		System.out.print("\n\nPress enter to continue...");
-		try {
-			System.in.read();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Menu.pressEnterToContinue();
 	}
 
 	private static void getCenterOfMass(SolarSystem system) {
