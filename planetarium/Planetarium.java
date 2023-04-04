@@ -168,12 +168,13 @@ public class Planetarium {
 				System.out.println(" |      |__ " + moon.getIdentifier());
 			}
 		}
-		var lastPlanet = planets.get(planets.size()-1);
-		System.out.println(" |__ " + lastPlanet.getIdentifier());
-		for(var moon : lastPlanet.getMoons()){
-			System.out.println("        |__ " + moon.getIdentifier());
+		var lastPlanet = planets.isEmpty() ? null : planets.get(planets.size()-1);
+		if (lastPlanet != null) {
+			System.out.println(" |__ " + lastPlanet.getIdentifier());
+			for(var moon : lastPlanet.getMoons()){
+				System.out.println("        |__ " + moon.getIdentifier());
+			}
 		}
-			
 	}
 
 	private static void getCenterOfMass(SolarSystem system) {
