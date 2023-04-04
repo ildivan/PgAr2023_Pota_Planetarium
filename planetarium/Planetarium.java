@@ -7,13 +7,11 @@ public class Planetarium {
 	private static final String INVALID_NUMBER = "ATTENZIONE: Il numero inserito non e' valido!";
 
 	public static void main(String[] args) {
-		SolarSystem system = new SolarSystem(0, 0, 3);
-
-		Menu.clearConsole();
+		SolarSystem system = introduction();
 
 		byte choice;
 		do {
-			Menu.welcome();
+			Menu.planetarium();
 			Menu.printMainMenu();
 			choice = Input.choice();
 			switch (choice) {
@@ -31,6 +29,14 @@ public class Planetarium {
 			}
 			Menu.clearConsole();
 		} while (true);
+	}
+
+	private static SolarSystem introduction() {
+		Menu.clearConsole();
+		Menu.welcome();
+		long mass = Input.readLong();
+		Menu.clearConsole();
+		return new SolarSystem(0, 0, mass);
 	}
 
 	private static void addCelestialBody(SolarSystem system) {
