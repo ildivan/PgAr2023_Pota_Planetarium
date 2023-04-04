@@ -1,6 +1,7 @@
 package planetarium;
 
 public class Menu {
+	private static final String OS = System.getProperty("os.name");
 	private static final String FRAME = "――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
 
 	protected static void welcome() {
@@ -42,5 +43,14 @@ public class Menu {
 		System.out.println("	1. Rimuovi Pianeta");
 		System.out.println("	2. Rimuovi Luna");
 		System.out.println("	3. Esci");
+	}
+
+	protected static void clearConsole() {
+		try {
+			if (OS.contains("Windows"))
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			else
+				new ProcessBuilder("bash", "-c", "clear").inheritIO().start().waitFor();
+		} catch (Exception e) {}
 	}
 }
