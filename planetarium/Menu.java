@@ -67,8 +67,7 @@ public class Menu {
 				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 			else
 				new ProcessBuilder("bash", "-c", "clear").inheritIO().start().waitFor();
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {}
 	}
 
 	protected static void pressEnterToContinue() {

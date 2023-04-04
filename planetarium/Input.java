@@ -22,6 +22,7 @@ public class Input {
 				return choice;
 			} catch (InputMismatchException e) {
 				System.out.println(INPUT_INVALID_FORMAT);
+				scanner.next();
 			}
 		} while (true);
 	}
@@ -34,18 +35,7 @@ public class Input {
 				return input;
 			} catch (InputMismatchException e) {
 				System.out.println(INPUT_INVALID_FORMAT);
-			}
-		} while (true);
-	}
-
-	public static int readInt() {
-		int input;
-		do {
-			try {
-				input = scanner.nextInt();
-				return input;
-			} catch (InputMismatchException e) {
-				System.out.println(INPUT_INVALID_FORMAT);
+				scanner.next();
 			}
 		} while (true);
 	}
@@ -58,6 +48,7 @@ public class Input {
 				return input;
 			} catch (InputMismatchException e) {
 				System.out.println(INPUT_INVALID_FORMAT);
+				scanner.next();
 			}
 		} while (true);
 	}
