@@ -3,6 +3,9 @@ package planetarium.solarsystem;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a planet that orbits a star.
+ */
 public class Planet extends CelestialBody{
     private Star star;
     private final List<Moon> moons;
@@ -51,7 +54,7 @@ public class Planet extends CelestialBody{
         return moons;
     }
 
-    //Counter of the moons around a planet, used to create identifiers that are unique.
+    //Counter of the moons created around the planet, used to create identifiers that are unique.
     int getNumberOfMoons() {
         return numberOfMoons;
     }
@@ -59,6 +62,7 @@ public class Planet extends CelestialBody{
     /**
      * Given an identifier, it searches for a moon around the planet with the same identifier.
      * WARNING: It does not search for moons on another planets!
+     * WARNING: Acelestial body that is not a planet will not be found given its  identifier.
      * @param identifier The identifier of the moon we are searching
      * @return The instance of the moon searched. May return null if the moon is not found.
      * @see Moon
