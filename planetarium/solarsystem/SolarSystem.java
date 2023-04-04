@@ -181,7 +181,7 @@ public class SolarSystem {
         for(var planet : planets){
             var moons = planet.getMoons();
             for(var moon : moons){
-                if(planet.distanceToStar() == moon.distanceToPlanet()){
+                if(planet.distanceToStar() <= moon.distanceToPlanet()){
                     return true;
                 }
             }
@@ -230,7 +230,7 @@ public class SolarSystem {
                 double planetRadiusDifference = Math.abs(planet.distanceToStar()-nextPlanet.distanceToStar());
 
                 for(var moon : moons){
-                    if(moon.distanceToPlanet() == planetRadiusDifference){
+                    if(moon.distanceToPlanet() <= planetRadiusDifference){
                         return true;
                     }
                 }

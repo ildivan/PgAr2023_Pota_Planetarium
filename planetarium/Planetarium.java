@@ -7,13 +7,11 @@ public class Planetarium {
 	private static final String INVALID_NUMBER = "ATTENZIONE: Il numero inserito non e' valido!";
 
 	public static void main(String[] args) {
-		SolarSystem system = new SolarSystem(0, 0, 3);
-
-		Menu.clearConsole();
-		Menu.welcome();
+		SolarSystem system = introduction();
 
 		byte choice;
 		do {
+			Menu.planetarium();
 			Menu.printMainMenu();
 			choice = Input.choice();
 			switch (choice) {
@@ -31,6 +29,14 @@ public class Planetarium {
 			}
 			Menu.clearConsole();
 		} while (true);
+	}
+
+	private static SolarSystem introduction() {
+		Menu.clearConsole();
+		Menu.welcome();
+		long mass = Input.readLong();
+		Menu.clearConsole();
+		return new SolarSystem(0, 0, mass);
 	}
 
 	private static void addCelestialBody(SolarSystem system) {
@@ -70,7 +76,7 @@ public class Planetarium {
 		long x = Input.readLong();
 		System.out.print("Inserire coordinate Y del pianeta: ");
 		long y = Input.readLong();
-		System.out.print("Inserire la massa del pianeta [Kg]: ");
+		System.out.print("Inserire la massa del pianeta [MKg]: ");
 		long mass = Input.readLong();
 		star.addNewPlanet(x, y, mass);
 	}
@@ -92,14 +98,29 @@ public class Planetarium {
 		long x = Input.readLong();
 		System.out.print("Inserire coordinate Y della luna: ");
 		long y = Input.readLong();
-		System.out.print("Inserire la massa della luna [Kg]: ");
+		System.out.print("Inserire la massa della luna [MKg]: ");
 		long mass = Input.readLong();
 		star.findPlanet(id).addNewMoon(x,y,mass);
 	}
 
 	private static void removeCelestialBody(SolarSystem system) {
+		var planets = system.getStar().getPlanets();
+		boolean emptyPlanets = planets.isEmpty();
+		boolean emptyMoons = true;
+		
 		Menu.clearConsole();
-		Menu.printRemoveCelestialBodyMenu();
+
+		for (var planet : planets) {
+			if (!planet.getMoons().isEmpty()) {
+				emptyMoons = false;
+				break;
+			}
+		}
+		Menu.printRemoveCelestialBodyMenu(emptyPlanets, emptyMoons);
+		
+		if (emptyPlanets)
+			return;
+
 		byte choice;
 		do {
 			choice = Input.choice();
@@ -109,10 +130,16 @@ public class Planetarium {
 					return;
 				}
 				case 2 -> {
+					if (emptyMoons)
+						return;
 					removeMoon(system);
 					return;
 				}
 				case 3 -> {
+					if (emptyMoons) {
+						System.out.println(INVALID_NUMBER);
+						break;
+					}
 					return;
 				}
 				default -> System.out.println(INVALID_NUMBER);
@@ -154,7 +181,14 @@ public class Planetarium {
 	}
 
 	private static void infoCelestialBody(SolarSystem system) {
-
+		Menu.clearConsole();
+		System.out.print("Inserire ID del corpo celeste: ");
+		var body = system.findCelestialBody(Input.readString());
+		if (body != null)
+			System.out.println("\n"+body);
+		else
+			System.out.println("\nCorpo celeste non trovato. L'ID e' corretto?");
+		Menu.pressEnterToContinue();
 	}
 
 	private static void showListCelestialBodies(SolarSystem system) {
@@ -180,16 +214,14 @@ public class Planetarium {
 			}
 		}
 
-		System.out.print("\n\nPress enter to continue...");
-		try {
-			System.in.read();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Menu.pressEnterToContinue();
 	}
 
 	private static void getCenterOfMass(SolarSystem system) {
-
+		Position centerOfMass = system.getCenterOfMass();
+		Menu.clearConsole();
+		System.out.println("Il centro di massa è alle coordinate (" + centerOfMass.getX() + ", " + centerOfMass.getY() + ")");
+		Menu.pressEnterToContinue();
 	}
 
 	private static void calculateRoute(SolarSystem system) {
@@ -197,6 +229,11 @@ public class Planetarium {
 	}
 
 	private static void showCollisions(SolarSystem system) {
-
+		Menu.clearConsole();
+		if (system.detectCollisions())
+			System.out.println("ATTENZIONE!!! Possibili collisioni tra corpi celesti!");
+		else
+			System.out.println("Tutto tranquillo. Nessuna collisione rilevata.");
+		Menu.pressEnterToContinue();
 	}
 }	

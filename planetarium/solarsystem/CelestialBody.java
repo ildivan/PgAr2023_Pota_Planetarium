@@ -90,7 +90,6 @@ public abstract class CelestialBody{
     @Override
     public String toString() {
         String className = getClass().getSimpleName();
-
         return String.format("[ %s %s\tmass: %dMkg position: %s]", className, getIdentifier(),getMass(),getPosition());
     }
 }
