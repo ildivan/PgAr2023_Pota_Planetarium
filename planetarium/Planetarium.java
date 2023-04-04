@@ -175,7 +175,14 @@ public class Planetarium {
 	}
 
 	private static void infoCelestialBody(SolarSystem system) {
-
+		Menu.clearConsole();
+		System.out.print("Inserire ID del corpo celeste: ");
+		var body = system.findCelestialBody(Input.readString());
+		if (body != null)
+			System.out.println("\n"+body);
+		else
+			System.out.println("\nCorpo celeste non trovato. L'ID e' corretto?");
+		Menu.pressEnterToContinue();
 	}
 
 	private static void showListCelestialBodies(SolarSystem system) {
@@ -205,7 +212,10 @@ public class Planetarium {
 	}
 
 	private static void getCenterOfMass(SolarSystem system) {
-
+		Position centerOfMass = system.getCenterOfMass();
+		Menu.clearConsole();
+		System.out.println("Il centro di massa è alle coordinate (" + centerOfMass.getX() + ", " + centerOfMass.getY() + ")");
+		Menu.pressEnterToContinue();
 	}
 
 	private static void calculateRoute(SolarSystem system) {
@@ -213,6 +223,11 @@ public class Planetarium {
 	}
 
 	private static void showCollisions(SolarSystem system) {
-
+		Menu.clearConsole();
+		if (system.detectCollisions())
+			System.out.println("ATTENZIONE!!! Possibili collisioni tra corpi celesti!");
+		else
+			System.out.println("Tutto tranquillo. Nessuna collisione rilevata.");
+		Menu.pressEnterToContinue();
 	}
 }	

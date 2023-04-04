@@ -37,10 +37,10 @@ public abstract class CelestialBody{
 
         return "[ " + className + " " +
                 getIdentifier() +
-                "\tmass: " +
+                "    mass: " +
                 getMass() +
-                "Mkg position: " +
+                " Mkg    position: " +
                 getPosition() +
-                ")]";
+                " ]";
     }
 }
