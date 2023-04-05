@@ -190,4 +190,98 @@ public class SolarSystem {
 
         return false;
     }
+
+    /**
+     * Finds the path from a celestial body in the universe to another.
+     * Example: " S1P1M1 > S1P1 > S1 > S1P3 "
+     * @param startIdentifier Identifier of the celestial body at the start of the  path.
+     * @param endIdentifier Identifier of the celestial body at the end of the path.
+     * @return A string that represents the path between the two celestial bodies.
+     */
+    public String findPath(String startIdentifier,String endIdentifier) throws IllegalArgumentException{
+        CelestialBody start = findCelestialBody(startIdentifier);
+        CelestialBody end = findCelestialBody(endIdentifier);
+
+        if(start == null || end == null) throw new IllegalArgumentException("Non valid identifiers.");
+
+        if(start instanceof Moon startMoon){
+            if(end instanceof Moon endMoon){
+                return moonToMoon(startMoon,endMoon);
+            } else if (end instanceof Planet endPlanet){
+                return moonToPlanet(startMoon,endPlanet);
+            } else if (end instanceof Star endStar){
+                return moonToStar(startMoon,endStar);
+            }
+        } else if (start instanceof Planet startPlanet){
+            if(end instanceof Moon endMoon){
+                return planetToMoon(startPlanet,endMoon);
+            } else if (end instanceof Planet endPlanet){
+                return planetToPlanet(startPlanet,endPlanet);
+            } else if (end instanceof Star endStar){
+                return planetToStar(startPlanet,endStar);
+            }
+        } else if (start instanceof Star startStar){
+            if (end instanceof Moon endMoon){
+                return starToMoon(startStar,endMoon);
+            } else if (end instanceof Planet endPlanet){
+                return starToPlanet(startStar,endPlanet);
+            }
+        }
+
+        return "Path type not covered";
+    }
+
+    private String moonToMoon(Moon start, Moon end){
+        return moonToPlanet(start,end.getPlanet()).concat(end.getPlanet().pathToMoon(end));
+    }
+
+    private String moonToPlanet(Moon start, Planet end){
+        if(end.findMoon(start.getIdentifier()) != null){
+            return start.getIdentifier().concat(start.pathToPlanet());
+        }
+
+        return start.getIdentifier().concat(" > ").concat(planetToPlanet(start.getPlanet(),end));
+    }
+
+    private String moonToStar(Moon start, Star end){
+        return start.getIdentifier().concat(" > ").concat(planetToStar(start.getPlanet(),end));
+    }
+
+
+
+    private String planetToMoon(Planet start, Moon end){
+        if(start.getStar().findPlanet(end.getPlanet().getIdentifier()) == null){
+            throw new IllegalArgumentException("Celestial bodies do not belong to the same system");
+        }
+
+        if(start.findMoon(end.getIdentifier()) == null){
+            return planetToPlanet(start,end.getPlanet()).concat(" > ").concat(end.getIdentifier());
+        }
+
+        return start.getIdentifier().concat(start.pathToMoon(end));
+    }
+
+    private String planetToPlanet(Planet start, Planet end){
+        return start.getIdentifier().concat(" > ").concat(starToPlanet(start.getStar(),end));
+    }
+
+    private String planetToStar(Planet start, Star end){
+        if(end.findPlanet(start.getIdentifier()) == null){
+            throw new IllegalArgumentException("Celestial bodies do not belong to the same system.");
+        }
+
+        return start.getIdentifier().concat(start.pathToStar());
+    }
+
+
+
+    private String starToMoon(Star start, Moon end){
+        return starToPlanet(start, end.getPlanet()).concat(end.getPlanet().pathToMoon(end));
+    }
+
+    private String starToPlanet(Star start, Planet end){
+        return start.getIdentifier().concat(start.pathToPlanet(end));
+    }
+
+
 }

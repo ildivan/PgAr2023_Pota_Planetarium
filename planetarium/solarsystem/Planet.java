@@ -20,7 +20,7 @@ public class Planet extends CelestialBody{
         this(new Position(x,y), planetMass, star);
     }
 
-    private Star getStar() {
+    public Star getStar() {
         return star;
     }
 
@@ -81,5 +81,24 @@ public class Planet extends CelestialBody{
     public double distanceToStar(){
         Position relative = getRelativePosition();
         return Math.sqrt( Math.pow(relative.getX(),2)+Math.pow(relative.getY(),2) );
+    }
+
+    String pathToStar(){
+        return String.format(" > %s", getStar().getIdentifier());
+    }
+
+    String pathToMoon(Moon moonToGo) throws IllegalArgumentException{
+        var moons = getMoons();
+        boolean found = false;
+        for(var moon : moons){
+            if (moon.getIdentifier().equals(moonToGo.getIdentifier())) {
+                found = true;
+                break;
+            }
+        }
+
+        if(!found) throw new IllegalArgumentException("Celestial bodies do not belong to the same system.");
+
+        return String.format(" > %s", moonToGo.getIdentifier());
     }
 }
