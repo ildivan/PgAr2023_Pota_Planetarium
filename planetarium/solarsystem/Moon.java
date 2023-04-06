@@ -30,8 +30,12 @@ public class Moon extends CelestialBody{
         return absolutePosition;
     }
 
-    //Returns the planet the moon is orbiting around
-    private Planet getPlanet() {
+    /**
+     * Getter method for the planet the moon orbits around.
+     * @return The planet which the moon orbits.
+     */
+    public Planet getPlanet() {
+
         return planet;
     }
 
@@ -52,4 +56,10 @@ public class Moon extends CelestialBody{
         Position relative = getRelativePosition();
         return Math.sqrt(Math.pow(relative.getX(),2) + Math.pow(relative.getY(), 2));
     }
+
+
+    String pathToPlanet(){
+        return String.format(" > %s", getPlanet().getIdentifier());
+    }
+
 }

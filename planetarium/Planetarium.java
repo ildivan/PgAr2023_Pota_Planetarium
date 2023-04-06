@@ -225,7 +225,24 @@ public class Planetarium {
 	}
 
 	private static void calculateRoute(SolarSystem system) {
+		Menu.clearConsole();
+		String path;
+		while(true){
+			try{
+				System.out.print("Inserire l'identificativo del primo corpo celeste: ");
+				String id1 = Input.readString();
+				System.out.print("Inserire l'identificativo del secondo corpo celeste: ");
+				String id2 = Input.readString();
 
+				path = system.findPath(id1,id2);
+				break;
+			}catch(IllegalArgumentException e){
+				System.out.println(e.getMessage());
+			}
+		}
+
+		System.out.println(path.concat("\n\n"));
+		Menu.pressEnterToContinue();
 	}
 
 	private static void showCollisions(SolarSystem system) {
