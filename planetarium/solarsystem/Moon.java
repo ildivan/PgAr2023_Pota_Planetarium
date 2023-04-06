@@ -19,7 +19,7 @@ public class Moon extends CelestialBody{
         return absolutePosition;
     }
 
-    private Planet getPlanet() {
+    public Planet getPlanet() {
         return planet;
     }
 
@@ -33,4 +33,10 @@ public class Moon extends CelestialBody{
 
         return Math.sqrt(Math.pow(relative.getX(),2) + Math.pow(relative.getY(), 2));
     }
+
+
+    String pathToPlanet(){
+        return String.format(" > %s", getPlanet().getIdentifier());
+    }
+
 }
