@@ -78,7 +78,7 @@ public class Star extends CelestialBody{
             }
         }
 
-        if(!found) throw new IllegalArgumentException("Celestial bodies do not belong to the same system.");
+        if(!found) throw new IllegalArgumentException("I corpi celesti non appartengono allo stesso sistema.");
 
         return String.format(" > %s", planetToGo.getIdentifier());
     }

@@ -199,10 +199,11 @@ public class SolarSystem {
      * @return A string that represents the path between the two celestial bodies.
      */
     public String findPath(String startIdentifier,String endIdentifier) throws IllegalArgumentException{
+        if(startIdentifier.equals(endIdentifier)) return "Nessun percorso richiesto.";
+
         CelestialBody start = findCelestialBody(startIdentifier);
         CelestialBody end = findCelestialBody(endIdentifier);
-
-        if(start == null || end == null) throw new IllegalArgumentException("Non valid identifiers.");
+        if(start == null || end == null) throw new IllegalArgumentException("Identificatori non validi.");
 
         if(start instanceof Moon startMoon){
             if(end instanceof Moon endMoon){
@@ -228,7 +229,7 @@ public class SolarSystem {
             }
         }
 
-        return "Path type not covered";
+        return "Tipo di percorso non supportato.";
     }
 
     private String moonToMoon(Moon start, Moon end){
@@ -251,7 +252,7 @@ public class SolarSystem {
 
     private String planetToMoon(Planet start, Moon end){
         if(start.getStar().findPlanet(end.getPlanet().getIdentifier()) == null){
-            throw new IllegalArgumentException("Celestial bodies do not belong to the same system");
+            throw new IllegalArgumentException("I corpi celesti non appartengono allo stesso sistema.");
         }
 
         if(start.findMoon(end.getIdentifier()) == null){
@@ -267,7 +268,7 @@ public class SolarSystem {
 
     private String planetToStar(Planet start, Star end){
         if(end.findPlanet(start.getIdentifier()) == null){
-            throw new IllegalArgumentException("Celestial bodies do not belong to the same system.");
+            throw new IllegalArgumentException("I corpi celesti non appartengono allo stesso sistema.");
         }
 
         return start.getIdentifier().concat(start.pathToStar());
