@@ -2,21 +2,59 @@ package planetarium.solarsystem;
 
 import java.util.ArrayList;
 
+/**
+ *  Represent a solar system : a star, his planets and the planets moons.
+ * */
+
 public class SolarSystem {
+
     private final Star star;
 
+
+    /**
+     * SolarSystem constructor.
+     * <p>
+     * The system is instantiated with its star's parameters.
+     *
+     * @param starPosition the position of the system's star relative to an arbitrary origin.
+     * @param starMass the mass of the star.
+     * @see Position
+     * */
     public SolarSystem(Position starPosition, long starMass){
         star = new Star(starPosition,starMass);
     }
 
+    /**
+     * SolarSystem constructor.
+     * <p>
+     * The system is instantiated with its star's parameters but receives coordinates instead of an
+     * instance of Position.
+     *
+     * @param x the offset along the x-axis of the star relative to an arbitrary origin.
+     * @param y the offset along the y-axis of the star relative to an arbitrary origin.
+     * @param starMass the mass of the star.
+     *
+     * */
     public SolarSystem(long x,long y, long starMass){
-        star = new Star(x,y,starMass);
+        this(new Position(x,y), starMass);
     }
 
+    /**
+     * Getter method for the star.
+     * <p>
+     * @return the star instance.
+     * @see Star
+     * */
     public Star getStar(){
         return star;
     }
 
+    /**
+     * Calculates the center of mass of the system.
+     * <p>
+     * @return the position of the  center of mass of the system
+     * @see Position
+     * */
     public Position getCenterOfMass(){
         final long systemMass = getSystemTotalMass();
         final Position centerOfMass = new Position(0,0);
@@ -49,6 +87,7 @@ public class SolarSystem {
         return centerOfMass;
     }
 
+    //Gets the total mass of the system (star + planets + moons)
     private long getSystemTotalMass(){
         // Star mass as starting mass
         long totalMass = getStar().getMass();
@@ -69,6 +108,13 @@ public class SolarSystem {
         return totalMass;
     }
 
+    /**
+     * Finds a celestial body (star, planet or moon) given its identifier.
+     * <p>
+     * @param identifier the celestial body unique identifier
+     * @return the instance of the celestial body, may return null if it does not exist.
+     * @see CelestialBody
+     */
     public CelestialBody findCelestialBody(String identifier){
         var star = getStar();
         if(identifier.equals(star.getIdentifier())) return star;
@@ -84,7 +130,10 @@ public class SolarSystem {
         return null;
     }
 
-    //Checks for all types of possible collisions in the system, return true if found.
+    /**
+     * Checks for all types of possible collisions in the system, return true if found.
+     * @return true if there are possible collisions, false if not.
+     */
     public boolean detectCollisions(){
         return checkCollisionBetweenPlanets() || checkCollisionsSamePlanetMoons()
                 || checkCollisionStarAndMoons() || checkCollisionDifferentPlanetMoons()
