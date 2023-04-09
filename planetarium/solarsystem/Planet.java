@@ -141,22 +141,22 @@ public class Planet extends CelestialBody{
         return Math.sqrt( Math.pow(relative.getX(),2)+Math.pow(relative.getY(),2) );
     }
 
-    String pathToStar(){
-        return String.format(" > %s", getStar().getIdentifier());
+    ArrayList<CelestialBody> pathToStar(){
+        var path = new ArrayList<CelestialBody>();
+        path.add(this);
+        path.add(getStar());
+        return path;
     }
 
-    String pathToMoon(Moon moonToGo) throws IllegalArgumentException{
+    ArrayList<CelestialBody> pathToMoon(Moon moonToGo) throws IllegalArgumentException{
         var moons = getMoons();
-        boolean found = false;
-        for(var moon : moons){
-            if (moon.getIdentifier().equals(moonToGo.getIdentifier())) {
-                found = true;
-                break;
-            }
-        }
 
-        if(!found) throw new IllegalArgumentException("I corpi celesti non appartengono allo stesso sistema.");
+        if(!moonToGo.getPlanet().getIdentifier().equals(getIdentifier()))
+            throw new IllegalArgumentException("La luna non appartiene al pianeta");
 
-        return String.format(" > %s", moonToGo.getIdentifier());
+        var path = new ArrayList<CelestialBody>();
+        path.add(this);
+        path.add(moonToGo);
+        return path;
     }
 }

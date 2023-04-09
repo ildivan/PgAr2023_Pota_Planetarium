@@ -33,10 +33,19 @@ public class Planetarium {
 
 	private static SolarSystem introduction() {
 		Menu.clearConsole();
-		Menu.welcome();
+		System.out.println("Hey, da qualche parte bisogna pur cominciare...");
+
+		System.out.print("Inserire la coordinata X della stella: ");
+		long x  = Input.readLong();
+
+		System.out.print("Inserire la coordinata Y della stella: ");
+		long y  = Input.readLong();
+
+		System.out.print("Inserire la massa della stella [MKg]: ");
 		long mass = Input.readLong();
+
 		Menu.clearConsole();
-		return new SolarSystem(0, 0, mass);
+		return new SolarSystem(x, y, mass);
 	}
 
 	private static void addCelestialBody(SolarSystem system) {
@@ -72,9 +81,9 @@ public class Planetarium {
 
 	private static void addPlanet(SolarSystem system) {
 		Star star = system.getStar();
-		System.out.print("\nInserire coordinate X del pianeta: ");
+		System.out.print("\nInserire coordinata X del pianeta (relativa alla sua stella): ");
 		long x = Input.readLong();
-		System.out.print("Inserire coordinate Y del pianeta: ");
+		System.out.print("Inserire coordinate Y del pianeta (relativa alla sua stella): ");
 		long y = Input.readLong();
 		System.out.print("Inserire la massa del pianeta [MKg]: ");
 		long mass = Input.readLong();
@@ -94,9 +103,9 @@ public class Planetarium {
 			System.out.println("Pianeta non trovato.");
 		}
 
-		System.out.print("\nInserire coordinate X della luna: ");
+		System.out.print("\nInserire coordinata X della luna (relativa al suo pianeta): ");
 		long x = Input.readLong();
-		System.out.print("Inserire coordinate Y della luna: ");
+		System.out.print("Inserire coordinata Y della luna (relativa al suo pianeta): ");
 		long y = Input.readLong();
 		System.out.print("Inserire la massa della luna [MKg]: ");
 		long mass = Input.readLong();

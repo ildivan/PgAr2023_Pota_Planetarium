@@ -116,7 +116,7 @@ public class Star extends CelestialBody{
         }
     }
 
-    String pathToPlanet(Planet planetToGo) throws IllegalArgumentException{
+    ArrayList<CelestialBody> pathToPlanet(Planet planetToGo) throws IllegalArgumentException{
         var planets = getPlanets();
         boolean found = false;
         for(var planet : planets){
@@ -128,6 +128,9 @@ public class Star extends CelestialBody{
 
         if(!found) throw new IllegalArgumentException("I corpi celesti non appartengono allo stesso sistema.");
 
-        return String.format(" > %s", planetToGo.getIdentifier());
+        var path = new ArrayList<CelestialBody>();
+        path.add(this);
+        path.add(planetToGo);
+        return path;
     }
 }

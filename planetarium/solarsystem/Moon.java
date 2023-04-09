@@ -1,5 +1,7 @@
 package planetarium.solarsystem;
 
+import java.util.ArrayList;
+
 /**
  * Represents a moon that orbits around a planet.
  */
@@ -58,8 +60,11 @@ public class Moon extends CelestialBody{
     }
 
 
-    String pathToPlanet(){
-        return String.format(" > %s", getPlanet().getIdentifier());
+    ArrayList<CelestialBody> pathToPlanet(){
+        var path = new ArrayList<CelestialBody>();
+        path.add(this);
+        path.add(getPlanet());
+        return path;
     }
 
 }

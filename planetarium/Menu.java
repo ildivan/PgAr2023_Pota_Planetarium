@@ -10,10 +10,6 @@ public class Menu {
 			return "――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
 	}
 
-	protected static void welcome() {
-		System.out.println("Hey, da qualche parte bisogna pur cominciare...");
-		System.out.print("Inserire la massa della stella [MKg]: ");
-	}
 
 	protected static void planetarium() {
 		System.out.println("\n"

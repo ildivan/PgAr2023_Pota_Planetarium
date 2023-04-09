@@ -87,11 +87,11 @@ public class Position {
 
     /**
      * To string method for the Position class
-     * Example: ( 12.0 , -7.4 )
+     * Example: ( 12.000 , -7.445 )
      * @return A string representing the position.
      */
     @Override
     public String toString() {
-        return "( " + getX() + " , " + getY() + " )";
+        return String.format("( %.3f , %.3f )",getX(),getY());
     }
 }
