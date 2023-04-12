@@ -7,6 +7,9 @@ package planetarium.solarsystem;
 public abstract class CelestialBody{
     /**
      * A string that identifies the celestial body, has to be unique.
+     * Star id examples: "S1" "S2" "S3"
+     * Planet id examples: "S1P1" "S1P2" "S2P1" "S2P2"
+     * Moon id examples: "S1P1M1" "S1P1M2" "S1P2M1" "S2P1M1"
      */
     private final String identifier;
 

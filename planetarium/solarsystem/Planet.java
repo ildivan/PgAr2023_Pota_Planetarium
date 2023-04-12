@@ -124,10 +124,10 @@ public class Planet extends CelestialBody{
     }
 
     /**
-     * Removes the planet from the system, and does it from the planet's instance.
+     * Removes the planet from its solar system, and does it from the planet's instance.
      */
     public void removeFromSystem() {
-        star.removeOldPlanet(this);
+        getStar().removeOldPlanet(this);
         star = null;
     }
 
@@ -141,6 +141,8 @@ public class Planet extends CelestialBody{
         return Math.sqrt( Math.pow(relative.getX(),2)+Math.pow(relative.getY(),2) );
     }
 
+
+    //Returns a list with the Planet and its Star as elements.
     ArrayList<CelestialBody> pathToStar(){
         var path = new ArrayList<CelestialBody>();
         path.add(this);
@@ -148,6 +150,7 @@ public class Planet extends CelestialBody{
         return path;
     }
 
+    //Returns a list with the Planet and the Moon as elements, throw exception if the moon does not orbit the planet.
     ArrayList<CelestialBody> pathToMoon(Moon moonToGo) throws IllegalArgumentException{
         var moons = getMoons();
 

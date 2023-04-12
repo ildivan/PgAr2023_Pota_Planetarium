@@ -116,9 +116,9 @@ public class Star extends CelestialBody{
         }
     }
 
-    ArrayList<CelestialBody> pathToPlanet(Planet planetToGo) throws IllegalArgumentException{
-        var planets = getPlanets();
 
+    //Returns a list with the Star and the Planet as elements.
+    ArrayList<CelestialBody> pathToPlanet(Planet planetToGo) throws IllegalArgumentException{
         if(!planetToGo.getStar().getIdentifier().equals(getIdentifier()))
             throw new IllegalArgumentException("I corpi celesti non appartengono allo stesso sistema.");
 

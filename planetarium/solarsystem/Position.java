@@ -86,6 +86,18 @@ public class Position {
     }
 
     /**
+     * Shorthand for multiplying the coordinates by the same scalar.
+     * @param amountX The scalar to multiply to the x coordinate.
+     * @param amountY The scalar to multiply to the y coordinate.
+     * @return Self reference.
+     */
+    public Position multiplyBy(double amountX, double amountY){
+        setX(getX()*amountX);
+        setY(getY()*amountY);
+        return this;
+    }
+
+    /**
      * To string method for the Position class
      * Example: ( 12.000 , -7.445 )
      * @return A string representing the position.

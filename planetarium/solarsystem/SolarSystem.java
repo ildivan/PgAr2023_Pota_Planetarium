@@ -70,7 +70,7 @@ public class SolarSystem {
             centerOfMass.increase(adjustedPlanetPosition);
 
             final var moons = planet.getMoons();
-            // Add weighted positions of the Moons
+            // Add weighted positions of the Moons for every Planet
             for(final var moon : moons){
                 final double moonMass = moon.getMass();
                 final Position adjustedMoonPosition = moon.getPosition().multiplyBy(moonMass);
@@ -78,9 +78,8 @@ public class SolarSystem {
             }
         }
 
-        //Divide by total mass
-        centerOfMass.setX(centerOfMass.getX()/systemMass);
-        centerOfMass.setY(centerOfMass.getY()/systemMass);
+        //Divide coordinates by total mass
+        centerOfMass.multiplyBy(1.0/systemMass);
 
         return centerOfMass;
     }
@@ -127,17 +126,20 @@ public class SolarSystem {
         return null;
     }
 
+
+
     /**
      * Checks for all types of possible collisions in the system, return true if found.
      * @return true if there are possible collisions, false if not.
      */
     public boolean detectCollisions(){
         return checkCollisionBetweenPlanets() || checkCollisionsSamePlanetMoons()
-                || checkCollisionStarAndMoons() || checkCollisionDifferentPlanetMoons()
-                || checkCollisionPlanetsAndMoons();
+                || checkCollisionStarAndMoons() || checkCollisionPlanetsAndMoons()
+                || checkCollisionDifferentPlanetMoons();
     }
 
     //Check collisions between planets
+    //Returns true if found
     private boolean checkCollisionBetweenPlanets(){
         var planets = getStar().getPlanets();
         var distancesFromStar = new ArrayList<Double>();
@@ -153,6 +155,7 @@ public class SolarSystem {
     }
 
     //Check collisions between moons of the same planet
+    //Returns true if found
     private boolean checkCollisionsSamePlanetMoons(){
         var planets = getStar().getPlanets();
 
@@ -172,6 +175,7 @@ public class SolarSystem {
     }
 
     //Check collisions of moons with the star
+    //Returns true if found
     private boolean checkCollisionStarAndMoons(){
         var planets = getStar().getPlanets();
 
@@ -188,12 +192,14 @@ public class SolarSystem {
     }
 
     //Check collisions within moons of different planets
+    //Optimized to not check twice any pair of moons.
+    //Returns true if found
     private boolean checkCollisionDifferentPlanetMoons() {
         var planets = getStar().getPlanets();
 
         for (int i = 0; i < planets.size(); i++) {
+            Planet first = planets.get(i);
             for (int j = i+1; j < planets.size(); j++) {
-                Planet first = planets.get(i);
                 Planet second = planets.get(j);
 
                 var firstMoons = first.getMoons();
@@ -215,18 +221,20 @@ public class SolarSystem {
     }
 
     //Checks collisions within planets and moons of other planets
+    //Optimized to not check twice any pairs.
+    //Returns true if found
     private boolean checkCollisionPlanetsAndMoons(){
         var planets = getStar().getPlanets();
 
         for (int i = 0; i < planets.size(); i++) {
+            var planet = planets.get(i);
             for (int j = i+1; j < planets.size(); j++) {
-                var planet = planets.get(i);
-                var nextPlanet = planets.get(j);
-                var moons = nextPlanet.getMoons();
+                var otherPlanet = planets.get(j);
+                var otherPlanetMoons = otherPlanet.getMoons();
 
-                double planetRadiusDifference = Math.abs(planet.distanceToStar()-nextPlanet.distanceToStar());
+                double planetRadiusDifference = Math.abs(planet.distanceToStar() - otherPlanet.distanceToStar());
 
-                for(var moon : moons){
+                for(var moon : otherPlanetMoons){
                     if(moon.distanceToPlanet() <= planetRadiusDifference){
                         return true;
                     }
@@ -237,22 +245,31 @@ public class SolarSystem {
         return false;
     }
 
+
+
+
     /**
      * Finds the path from a celestial body in the universe to another.
-     * Example: " S1P1M1 > S1P1 > S1 > S1P3 "
+     * Examples:
+     * " S1P1M1 > S1P1 > S1 > S1P3 "
+     * " S1 > S1P1 > S1P1M1 "
+     * " S1P1 > S1 > S1P2 "
      * @param startIdentifier Identifier of the celestial body at the start of the  path.
      * @param endIdentifier Identifier of the celestial body at the end of the path.
      * @return A string that represents the path between the two celestial bodies.
      */
     public String findPath(String startIdentifier,String endIdentifier) throws IllegalArgumentException{
-        if(startIdentifier.equals(endIdentifier)) return "Nessun percorso richiesto.";
 
         CelestialBody start = findCelestialBody(startIdentifier);
         CelestialBody end = findCelestialBody(endIdentifier);
         if(start == null || end == null) throw new IllegalArgumentException("Identificatori non validi.");
 
+        //Check if the start and end are the same.
+        if(startIdentifier.equals(endIdentifier)) return "Nessun percorso richiesto.";
+
         ArrayList<CelestialBody> path = null;
 
+        //Casts the start and end into their specific type of CelestialBody and produces the path accordingly.
         if(start instanceof Moon startMoon){
             if(end instanceof Moon endMoon){
                 path =  moonToMoon(startMoon,endMoon);
@@ -282,6 +299,7 @@ public class SolarSystem {
     }
 
     //Converts list of celestial bodies to a string representing a path.
+    //Does not check if the path makes sense, that is up to the methods that creates it.
     private static String pathToString(ArrayList<CelestialBody> path){
         if(path == null || path.isEmpty()) return "Percorso non supportato.";
 
@@ -336,6 +354,8 @@ public class SolarSystem {
         Collections.reverse(path);
         return path;
     }
+
+
 
     private ArrayList<CelestialBody> starToMoon(Star start, Moon end){
         var path = star.pathToPlanet(end.getPlanet());

@@ -37,12 +37,11 @@ public class Moon extends CelestialBody{
      * @return The planet which the moon orbits.
      */
     public Planet getPlanet() {
-
         return planet;
     }
 
     /**
-     * Removes a moon from the system, and does it from the moon instance.
+     * Removes a moon from its solar system, and does it from the moon instance.
      */
     public void removeFromSystem(){
         getPlanet().removeOldMoon(this);
@@ -59,7 +58,7 @@ public class Moon extends CelestialBody{
         return Math.sqrt(Math.pow(relative.getX(),2) + Math.pow(relative.getY(), 2));
     }
 
-
+    //Returns a list with the Moon and its  Planet as elements.
     ArrayList<CelestialBody> pathToPlanet(){
         var path = new ArrayList<CelestialBody>();
         path.add(this);
