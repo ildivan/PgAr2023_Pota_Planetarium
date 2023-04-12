@@ -116,7 +116,7 @@ public class Planetarium {
 		var planets = system.getStar().getPlanets();
 		boolean emptyPlanets = planets.isEmpty();
 		boolean emptyMoons = true;
-		
+
 		Menu.clearConsole();
 
 		for (var planet : planets) {
@@ -126,7 +126,7 @@ public class Planetarium {
 			}
 		}
 		Menu.printRemoveCelestialBodyMenu(emptyPlanets, emptyMoons);
-		
+
 		if (emptyPlanets)
 			return;
 
@@ -157,36 +157,31 @@ public class Planetarium {
 	}
 
 	private static void removePlanet(SolarSystem system) {
-		String idPlanet;
-		CelestialBody body;
+		Planet planet;
 		while (true) {
 			System.out.print("\nInserire ID del pianeta da rimuovere: ");
-			idPlanet = Input.readString();
-			body = system.findCelestialBody(idPlanet);
-			if (body != null && (body instanceof Planet))
+			String idPlanet = Input.readString();
+			if (system.findCelestialBody(idPlanet) instanceof Planet found) {
+				planet = found;
 				break;
+			}
 			System.out.println("Pianeta non esistente, oppure non è un pianeta.");
 		}
-		if(body instanceof Planet planet){
-			planet.removeFromSystem();
-		}
+		planet.removeFromSystem();
 	}
 
 	private static void removeMoon(SolarSystem system) {
-		String idLuna;
-		CelestialBody body;
+		Moon moon;
 		while(true){
 			System.out.print("\nInserire ID della luna: ");
-			idLuna = Input.readString();
-			body = system.findCelestialBody(idLuna);
-			if (body != null && (body instanceof Moon))
+			String idLuna = Input.readString();
+			if (system.findCelestialBody(idLuna) instanceof Moon found) {
+				moon = found;
 				break;
+			}
 			System.out.println("Luna non esistente, oppure non è una luna.");
 		}
-
-		if(body instanceof Moon moon){
-			moon.removeFromSystem();
-		}
+		moon.removeFromSystem();
 	}
 
 	private static void infoCelestialBody(SolarSystem system) {
@@ -262,4 +257,4 @@ public class Planetarium {
 			System.out.println("Tutto tranquillo. Nessuna collisione rilevata.");
 		Menu.pressEnterToContinue();
 	}
-}	
+}

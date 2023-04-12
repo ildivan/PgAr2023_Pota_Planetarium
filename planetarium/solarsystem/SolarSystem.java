@@ -358,7 +358,7 @@ public class SolarSystem {
 
 
     private ArrayList<CelestialBody> starToMoon(Star start, Moon end){
-        var path = star.pathToPlanet(end.getPlanet());
+        var path = start.pathToPlanet(end.getPlanet());
         path.add(end);
         return path;
     }

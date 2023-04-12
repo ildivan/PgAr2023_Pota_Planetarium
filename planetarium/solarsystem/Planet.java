@@ -152,8 +152,6 @@ public class Planet extends CelestialBody{
 
     //Returns a list with the Planet and the Moon as elements, throw exception if the moon does not orbit the planet.
     ArrayList<CelestialBody> pathToMoon(Moon moonToGo) throws IllegalArgumentException{
-        var moons = getMoons();
-
         if(!moonToGo.getPlanet().getIdentifier().equals(getIdentifier()))
             throw new IllegalArgumentException("La luna non appartiene al pianeta");
 
