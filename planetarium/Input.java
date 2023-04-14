@@ -11,8 +11,12 @@ public class Input {
 
     private static Scanner createScanner() {
         return new Scanner(System.in);
-      }
+    }
 
+	/**
+	 * Read user input and confirm it is a valid byte number.
+	 * @return A byte number representing the menu choice.
+	 */
     public static byte choice() {
 		byte choice;
 		do {
@@ -27,6 +31,10 @@ public class Input {
 		} while (true);
 	}
 
+	/**
+	 * Read user input and confirm it is a valid long number.
+	 * @return A long number representing a celestial body coordinate or his mass.
+	 */
 	public static long readLong() {
 		long input;
 		do {
@@ -40,6 +48,11 @@ public class Input {
 		} while (true);
 	}
 
+	/**
+	 * Read user input and confirm it is a valid String.
+	 * If the user unintentionally inserts a space, it will be removed.
+	 * @return A String representing the celestial ID.
+	 */
 	public static String readString() {
 		String input;
 		do {

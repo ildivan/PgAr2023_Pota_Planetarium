@@ -3,6 +3,7 @@ package planetarium;
 public class Menu {
 	private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");
 
+	// Different frame for Windows user
 	private static String getFrame() {
 		if (IS_WINDOWS)
 			return "----------------------------------------------------------";
@@ -10,7 +11,7 @@ public class Menu {
 			return "――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
 	}
 
-
+	// Title UNICODE Art
 	protected static void planetarium() {
 		System.out.println("\n"
 				+ "\t██████╗░██╗░░░░░░█████╗░███╗░░██╗███████╗████████╗░█████╗░██████╗░██╗██╗░░░██╗███╗░░░███╗\n"
@@ -22,6 +23,7 @@ public class Menu {
 		System.out.println("\nBenvenuto al gestionale degli Xylophaxians");
 	}
 
+	// All main menù options 
 	protected static void printMainMenu() {
 		System.out.println(getFrame());
 		System.out.println("	1. Aggiungi nuovo Pianeta/Luna");
@@ -34,6 +36,7 @@ public class Menu {
 		System.out.println("	8. Esci");
 	}
 
+	// Menù for adding celestial bodies
 	protected static void printAddCelestialBodyMenu(boolean emptyPlanets) {
 		System.out.println(getFrame());
 		System.out.println("	1. Aggiungi nuovo Pianeta");
@@ -45,6 +48,7 @@ public class Menu {
 		System.out.println("	3. Esci");
 	}
 
+	// Menù for removing celestial bodies
 	protected static void printRemoveCelestialBodyMenu(boolean emptyPlanets, boolean emptyMoons) {
 		System.out.println(getFrame());
 		if (emptyPlanets) {
@@ -62,6 +66,7 @@ public class Menu {
 		System.out.println("	3. Esci");
 	}
 
+	// Try to clear console for better reading
 	protected static void clearConsole() {
 		try {
 			if (IS_WINDOWS)
@@ -71,6 +76,7 @@ public class Menu {
 		} catch (Exception e) {}
 	}
 
+	// Wait for the user to type enter
 	protected static void pressEnterToContinue() {
 		System.out.print("\n\nPremi Invio per continuare...");
 		try {

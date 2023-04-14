@@ -189,7 +189,7 @@ public class Planetarium {
 		System.out.print("Inserire ID del corpo celeste: ");
 		var body = system.findCelestialBody(Input.readString());
 		if (body != null)
-			System.out.println("\n"+body);
+			System.out.println("\n" + body);
 		else
 			System.out.println("\nCorpo celeste non trovato. L'ID e' corretto?");
 		Menu.pressEnterToContinue();
@@ -238,7 +238,7 @@ public class Planetarium {
 				System.out.print("Inserire l'identificativo del secondo corpo celeste: ");
 				String id2 = Input.readString();
 
-				path = system.findPath(id1,id2);
+				path = system.findPath(id1, id2);
 				break;
 			}catch(IllegalArgumentException e){
 				System.out.println(e.getMessage());

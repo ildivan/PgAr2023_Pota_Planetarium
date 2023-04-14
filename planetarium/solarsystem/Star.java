@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Represent a star, the center of its solar system.
  */
-public class Star extends CelestialBody{
+public class Star extends CelestialBody {
     private final List<Planet> planets;
     private int numberOfPlanets = 0;
     
@@ -42,7 +42,7 @@ public class Star extends CelestialBody{
 
     /**
      * Getter method for the list of planets orbiting the star.
-     * @return the list of Planet instances orbiting the star.
+     * @return The list of Planet instances orbiting the star.
      * @see Planet
      */
     public List<Planet> getPlanets() {
@@ -50,7 +50,7 @@ public class Star extends CelestialBody{
     }
 
     //Counter of planets created around the star, used to make unique identifiers.
-    int getNumberOfPlanets(){
+    int getNumberOfPlanets() {
         return numberOfPlanets;
     }
 
@@ -60,14 +60,13 @@ public class Star extends CelestialBody{
      * WARNING: It does not search for planets orbiting other stars.
      * WARNING: A celestial body that is not a planet will not be found given its identifier.
      * @param identifier The identifier of the searched planet.
-     * @return the instance of the planet searched. May return null if the planet is not found.
+     * @return The instance of the planet searched. May return null if the planet is not found.
      * @see Planet
      */
-    public Planet findPlanet(String identifier){
-        for(var planet : getPlanets()){
-            if(identifier.equals(planet.getIdentifier())){
+    public Planet findPlanet(String identifier) {
+        for(var planet : getPlanets()) {
+            if(identifier.equals(planet.getIdentifier()))
                 return planet;
-            }
         }
         return null;
     }
@@ -79,9 +78,9 @@ public class Star extends CelestialBody{
      * @param planetMass The new planet's mass.
      * @see Planet
      */
-    public void addNewPlanet(Position planetRelativePosition, long planetMass){
+    public void addNewPlanet(Position planetRelativePosition, long planetMass) {
         if(planets.size() < MAX_NUMBER_OF_PLANETS){
-            planets.add(new Planet(planetRelativePosition,planetMass,this));
+            planets.add(new Planet(planetRelativePosition, planetMass, this));
             numberOfPlanets++;
         }
     }
@@ -89,17 +88,17 @@ public class Star extends CelestialBody{
     /**
      * Creates a new planet orbiting the star.
      * WARNING: It may not create the planet if it exceeds the max number.
-     * @param relativeX the new planet's offset along the x-axis relative to the star.
-     * @param relativeY the new planet's offset along the y-axis relative to the star.
+     * @param relativeX The new planet's offset along the x-axis relative to the star.
+     * @param relativeY The new planet's offset along the y-axis relative to the star.
      * @param planetMass The new planet's mass.
      * @see Planet
      */
-    public void addNewPlanet(long relativeX, long relativeY, long planetMass){
-        addNewPlanet(new Position(relativeX,relativeY),planetMass);
+    public void addNewPlanet(long relativeX, long relativeY, long planetMass) {
+        addNewPlanet(new Position(relativeX, relativeY), planetMass);
     }
 
     //Removes a planet given its instance
-    void removeOldPlanet(Planet planetToRemove){
+    void removeOldPlanet(Planet planetToRemove) {
         planets.remove(planetToRemove);
     }
 
@@ -109,16 +108,15 @@ public class Star extends CelestialBody{
      * @param identifier The identifier of the planet to be removed.
      * @see Planet
      */
-    public void removeOldPlanet(String identifier){
+    public void removeOldPlanet(String identifier) {
         Planet planetToRemove = findPlanet(identifier);
-        if(planetToRemove != null){
+        if(planetToRemove != null)
             planetToRemove.removeFromSystem();
-        }
     }
 
 
     //Returns a list with the Star and the Planet as elements.
-    ArrayList<CelestialBody> pathToPlanet(Planet planetToGo) throws IllegalArgumentException{
+    ArrayList<CelestialBody> pathToPlanet(Planet planetToGo) throws IllegalArgumentException {
         if(!planetToGo.getStar().getIdentifier().equals(getIdentifier()))
             throw new IllegalArgumentException("I corpi celesti non appartengono allo stesso sistema.");
 
