@@ -69,8 +69,9 @@ public class Planet extends CelestialBody {
      * WARNING: It does not search for moons on another planets!
      * WARNING: Acelestial body that is not a planet will not be found given its  identifier.
      * @param identifier The identifier of the moon we are searching
-     * @return The instance of the moon searched. May return null if the moon is not found.
+     * @return The instance of the moon searched. May throw CelestialBodyNotFoundException if the moon is not found.
      * @see Moon
+     * @see CelestialBodyNotFoundException
      */
     public Moon findMoon(String identifier) throws CelestialBodyNotFoundException{
         for(var moon : getMoons()){

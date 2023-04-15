@@ -107,7 +107,8 @@ public class SolarSystem {
     /**
      * Finds a celestial body (star, planet or moon) given its identifier.
      * @param identifier The celestial body unique identifier
-     * @return The instance of the celestial body, may return null if it does not exist.
+     * @return <p>The instance of the celestial body, may return null if it does not exist.
+     * May throw CelestialBodyNotFoundException if the celestial body is not found inside the solar system</p>
      * @see CelestialBody
      */
     public CelestialBody findCelestialBody(String identifier) throws CelestialBodyNotFoundException {
@@ -255,7 +256,8 @@ public class SolarSystem {
      * " S1P1 > S1 > S1P2 "
      * @param startIdentifier Identifier of the celestial body at the start of the  path.
      * @param endIdentifier Identifier of the celestial body at the end of the path.
-     * @return A string that represents the path between the two celestial bodies.
+     * @return <p>A string that represents the path between the two celestial bodies.
+     * May throw PathBetweenDifferentSolarSystem if the two celestial bodies do not belong to the same system</p>
      */
     public String findPath(String startIdentifier,String endIdentifier) throws PathBetweenDifferentSystemException {
         CelestialBody start;

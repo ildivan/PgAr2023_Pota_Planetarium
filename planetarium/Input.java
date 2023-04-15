@@ -12,10 +12,9 @@ public class Input {
         return new Scanner(System.in);
     }
 
-	/**
-	 * Read user input and confirm it is a valid byte number.
-	 * @return A byte number representing the menu choice.
-	 */
+
+	//Read user input and confirm it is a valid byte number.
+	//returns a byte number representing the menu choice.
     public static byte choice() {
 		byte choice;
 		do {
@@ -31,10 +30,9 @@ public class Input {
 		} while (true);
 	}
 
-	/**
-	 * Read user input and confirm it is a valid int number.
-	 * @return A int number representing the amount of planets or moons to generate.
-	 */
+
+	//Read user input and confirm it is a valid integer.
+	//returns an integer representing a celestial body mass.
 	public static int readInt(String message) {
 		int input;
 		do {
@@ -49,10 +47,8 @@ public class Input {
 		} while (true);
 	}
 
-	/**
-	 * Read user input and confirm it is a valid long number.
-	 * @return A long number representing a celestial body mass.
-	 */
+	//Read user input and confirm it is a valid long number.
+	//returns a long number representing a celestial body mass.
 	public static long readLong(String message) {
 		long input;
 		do {
@@ -67,10 +63,8 @@ public class Input {
 		} while (true);
 	}
 
-	/**
-	 * Read user input and confirm it is a valid double number.
-	 * @return A double number representing a celestial body coordinate.
-	 */
+	//Read user input and confirm it is a valid double.
+	//returns a double representing a celestial body coordinate.
 	public static double readDouble(String message) {
 		double input;
 		do {
@@ -85,11 +79,9 @@ public class Input {
 		} while (true);
 	}
 
-	/**
-	 * Read user input and confirm it is a valid String.
-	 * If the user unintentionally inserts a space, it will be removed.
-	 * @return A String representing the celestial ID.
-	 */
+	 //Read user input and confirm it is a valid String.
+	 //If the user unintentionally inserts a space, it will be removed.
+	 //returns a String representing the celestial ID.
 	public static String readString(String message) {
 		String input;
 		do {

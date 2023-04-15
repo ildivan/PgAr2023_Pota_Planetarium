@@ -23,7 +23,7 @@ public class Menu {
 		System.out.println("\nBenvenuto al gestionale degli Xylophaxians");
 	}
 
-	// All main menù options 
+	// All main menu options
 	protected static void printMainMenu() {
 		System.out.println(getFrame());
 		System.out.println("	1. Aggiungi nuovo Pianeta/Luna");
@@ -37,7 +37,7 @@ public class Menu {
 		System.out.println("	9. Esci");
 	}
 
-	// Menù for adding celestial bodies
+	// Menu for adding celestial bodies
 	protected static void printAddCelestialBodyMenu(boolean emptyPlanets) {
 		clearConsole();
 		System.out.println(getFrame());
@@ -50,7 +50,7 @@ public class Menu {
 		System.out.println("	3. Esci");
 	}
 
-	// Menù for removing celestial bodies
+	// Menu for removing celestial bodies
 	protected static void printRemoveCelestialBodyMenu(boolean emptyPlanets, boolean emptyMoons) {
 		clearConsole();
 		System.out.println(getFrame());

@@ -63,8 +63,9 @@ public class Star extends CelestialBody {
      * WARNING: It does not search for planets orbiting other stars.
      * WARNING: A celestial body that is not a planet will not be found given its identifier.
      * @param identifier The identifier of the searched planet.
-     * @return The instance of the planet searched. May return null if the planet is not found.
+     * @return The instance of the planet searched. May throw CelestialBodyNotFoundException if the planet is not found.
      * @see Planet
+     * @see CelestialBodyNotFoundException
      */
     public Planet findPlanet(String identifier) throws CelestialBodyNotFoundException{
         for(var planet : getPlanets()){
