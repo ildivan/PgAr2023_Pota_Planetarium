@@ -94,7 +94,7 @@ public class Planetarium {
 		String id;
 		Star star = system.getStar();
 
-		while(true){
+		while(true) {
 			System.out.print("\nInserire ID del pianeta della luna: ");
 			id = Input.readString();
 
@@ -109,7 +109,7 @@ public class Planetarium {
 		long y = Input.readLong();
 		System.out.print("Inserire la massa della luna [MKg]: ");
 		long mass = Input.readLong();
-		star.findPlanet(id).addNewMoon(x,y,mass);
+		star.findPlanet(id).addNewMoon(x, y, mass);
 	}
 
 	private static void removeCelestialBody(SolarSystem system) {
@@ -119,16 +119,18 @@ public class Planetarium {
 
 		Menu.clearConsole();
 
-		for (var planet : planets) {
-			if (!planet.getMoons().isEmpty()) {
-				emptyMoons = false;
-				break;
-			}
-		}
-		Menu.printRemoveCelestialBodyMenu(emptyPlanets, emptyMoons);
-
-		if (emptyPlanets)
+		if (emptyPlanets) {
+			Menu.printRemoveCelestialBodyMenu(emptyPlanets, emptyMoons);
 			return;
+		} else {
+			for (var planet : planets) {
+				if (!planet.getMoons().isEmpty()) {
+					emptyMoons = false;
+					break;
+				}
+			}
+			Menu.printRemoveCelestialBodyMenu(emptyPlanets, emptyMoons);
+		}
 
 		byte choice;
 		do {
