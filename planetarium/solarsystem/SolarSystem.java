@@ -364,8 +364,6 @@ public class SolarSystem {
     }
 
 
-
-
     private ArrayList<CelestialBody> starToMoon(Star start, Moon end) throws PathBetweenDifferentSystemException {
         var path = start.pathToPlanet(end.getPlanet());
         path.add(end);
