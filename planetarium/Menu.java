@@ -37,34 +37,41 @@ public class Menu {
 		System.out.println("	9. Esci");
 	}
 
-	// Menu for adding celestial bodies
-	protected static void printAddCelestialBodyMenu(boolean emptyPlanets) {
+	protected static void printAddPlanetMenu(){
 		clearConsole();
 		System.out.println(getFrame());
 		System.out.println("	1. Aggiungi nuovo Pianeta");
-		if (emptyPlanets) {
-			System.out.println("	2. Esci");
-			return;
-		}
+		System.out.println("	2. Esci");
+	}
+
+	// Menu for adding celestial bodies
+	protected static void printAddCelestialBodyMenu() {
+		clearConsole();
+		System.out.println(getFrame());
+		System.out.println("	1. Aggiungi nuovo Pianeta");
 		System.out.println("	2. Aggiungi nuova Luna");
 		System.out.println("	3. Esci");
 	}
 
-	// Menu for removing celestial bodies
-	protected static void printRemoveCelestialBodyMenu(boolean emptyPlanets, boolean emptyMoons) {
+	protected static void printRemoveEmptyMenu(){
 		clearConsole();
 		System.out.println(getFrame());
-		if (emptyPlanets) {
-			System.out.println("Hey, cosa stai cercando? Il sistema e' vuoto!");
-			pressEnterToContinue();
-			return;
-		}
+		System.out.println("Hey, cosa stai cercando? Il sistema e' vuoto!");
+		pressEnterToContinue();
+	}
 
+	protected static void printRemovePlanetMenu(){
+		clearConsole();
+		System.out.println(getFrame());
 		System.out.println("	1. Rimuovi Pianeta");
-		if (emptyMoons) {
-			System.out.println("	2. Esci");
-			return;
-		}
+		System.out.println("	2. Esci");
+	}
+
+	// Menu for removing celestial bodies
+	protected static void printRemoveCelestialBodyMenu() {
+		clearConsole();
+		System.out.println(getFrame());
+		System.out.println("	1. Rimuovi Pianeta");
 		System.out.println("	2. Rimuovi Luna");
 		System.out.println("	3. Esci");
 	}

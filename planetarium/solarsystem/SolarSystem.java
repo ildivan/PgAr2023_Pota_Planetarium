@@ -209,10 +209,11 @@ public class SolarSystem {
 
                 for (int k = 0; k < firstMoons.size(); k++) {
                     for (int l = k+1; l < firstMoons.size(); l++) {
-                        double planetRadiusDifference = Math.abs( first.distanceToStar() - second.distanceToStar() );
+                        double distanceToStarDifference = Math.abs( first.distanceToStar() - second.distanceToStar() );
+
                         Moon firstMoon = firstMoons.get(i);
                         Moon secondMoon = secondMoons.get(j);
-                        if(firstMoon.distanceToPlanet() + secondMoon.distanceToPlanet() >= planetRadiusDifference)
+                        if(firstMoon.distanceToPlanet() + secondMoon.distanceToPlanet() >= distanceToStarDifference)
                             return true;
                     }
                 }
@@ -233,10 +234,10 @@ public class SolarSystem {
                 var otherPlanet = planets.get(j);
                 var otherPlanetMoons = otherPlanet.getMoons();
 
-                double planetRadiusDifference = Math.abs( planet.distanceToStar() - otherPlanet.distanceToStar() );
+                double distanceToStarDifference = Math.abs( planet.distanceToStar() - otherPlanet.distanceToStar() );
 
                 for(var moon : otherPlanetMoons) {
-                    if(moon.distanceToPlanet() <= planetRadiusDifference)
+                    if(moon.distanceToPlanet() <= distanceToStarDifference)
                         return true;
                 }
             }
@@ -304,7 +305,9 @@ public class SolarSystem {
     //Converts list of celestial bodies to a string representing a path.
     //Does not check if the path makes sense, that is up to the methods that creates it.
     private static String pathToString(ArrayList<CelestialBody> path) {
-        StringBuffer sPath = new StringBuffer(String.format("%s ", path.get(0).getIdentifier()));
+        if (path == null || path.isEmpty()) return "";
+
+        StringBuilder sPath = new StringBuilder(String.format("%s ", path.get(0).getIdentifier()));
 
         for(int i = 1; i < path.size(); i++)
             sPath.append(String.format(" > %s", path.get(i).getIdentifier()));
@@ -332,9 +335,6 @@ public class SolarSystem {
         Collections.reverse(path);
         return path;
     }
-
-
-
 
     private ArrayList<CelestialBody> planetToMoon(Planet start, Moon end) throws PathBetweenDifferentSystemException{
         try {

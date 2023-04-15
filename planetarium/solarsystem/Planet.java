@@ -18,15 +18,15 @@ public class Planet extends CelestialBody {
      */
     public static final int MAX_NUMBER_OF_MOONS = 5000;
 
-    //Package-private because it should be instantiated ONLY from a Star object's appropriate method.
+    //Protected because it should be instantiated ONLY from a Star object's appropriate method.
     Planet(Position planetPosition, long planetMass, Star star) {
         super(planetPosition, planetMass, star.getIdentifier() + "P" + (star.getNumberOfPlanets() + 1));
         this.star = star;
         moons = new ArrayList<>();
     }
 
-    //Package-private because it should be instantiated ONLY from a Star object's appropriate method.
-    Planet(double x, double y, long planetMass, Star star) {
+    //Protected because it should be instantiated ONLY from a Star object's appropriate method.
+    protected Planet(double x, double y, long planetMass, Star star) {
         this(new Position(x,y), planetMass, star);
     }
 
@@ -60,7 +60,7 @@ public class Planet extends CelestialBody {
     }
 
     //Counter of the moons created around the planet, used to create identifiers that are unique.
-    int getNumberOfMoons() {
+    protected int getNumberOfMoons() {
         return numberOfMoons;
     }
 
@@ -109,7 +109,7 @@ public class Planet extends CelestialBody {
     }
 
     //Removes a moon given its instance.
-    void removeOldMoon(Moon moonToDelete) {
+    protected void removeOldMoon(Moon moonToDelete) {
         moons.remove(moonToDelete);
     }
 
@@ -146,7 +146,7 @@ public class Planet extends CelestialBody {
 
 
     //Returns a list with the Planet and its Star as elements.
-    ArrayList<CelestialBody> pathToStar() {
+    protected ArrayList<CelestialBody> pathToStar() {
         var path = new ArrayList<CelestialBody>();
         path.add(this);
         path.add(getStar());
@@ -154,7 +154,7 @@ public class Planet extends CelestialBody {
     }
 
     //Returns a list with the Planet and the Moon as elements, throw exception if the moon does not orbit the planet.
-    ArrayList<CelestialBody> pathToMoon(Moon moonToGo) throws CelestialBodyNotFoundException{
+    protected ArrayList<CelestialBody> pathToMoon(Moon moonToGo) throws CelestialBodyNotFoundException{
         if(!moonToGo.getPlanet().getIdentifier().equals(getIdentifier()))
             throw new CelestialBodyNotFoundException(moonToGo);
 

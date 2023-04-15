@@ -2,6 +2,8 @@ package planetarium;
 
 import planetarium.solarsystem.*;
 import planetarium.solarsystem.error.CelestialBodyNotFoundException;
+import planetarium.solarsystem.error.PathBetweenDifferentSystemException;
+
 import java.util.Random;
 
 public class Planetarium {
@@ -18,12 +20,19 @@ public class Planetarium {
 	private static final String INSERT_MOON_X = "Inserire coordinata X della luna (relativa al suo pianeta): ";
 	private static final String INSERT_MOON_Y = "Inserire coordinata Y della luna (relativa al suo pianeta): ";
 	private static final String INSERT_MOON_MASS = "Inserire la massa della luna: ";
-	
+
+	private static final String NUMBER_OF_PLANET_TO_GENERATE_PROMPT = "\nQuanti pianeti vuoi generare? [Max %d]\nInserisci una quantita': ";
+	private static final String NUMBER_OF_MOONS_PER_PLANET_TO_GENERATE_PROMPT = "\nQuante lune vuoi generare per pianeta? [Max %d]\nInserisci una quantita': ";
+
+	private static final String GENERATE_PLANET_ERROR_MESSAGE = "Sono ammessi un massimo di %d pianeti!";
+	private static final String GENERATE_MOON_ERROR_MESSAGE = "Sono ammesse un massimo di %d lune per pianeta!";
+
 	public static void main(String[] args) {
 		SolarSystem system = introduction();
 
 		byte choice;
 		do {
+			//Advised full screen
 			Menu.planetarium();
 			Menu.printMainMenu();
 			choice = Input.choice();
@@ -58,38 +67,55 @@ public class Planetarium {
 		return new SolarSystem(x, y, mass);
 	}
 
+
+
+
 	//Main Switch Case 1: print menù and await user input.
 	//If the SolarSystem is empty, the menu will be different.
 	private static void addCelestialBody(SolarSystem system) {
 		Star star = system.getStar();
 		boolean emptyPlanets = star.getPlanets().isEmpty();
-		Menu.printAddCelestialBodyMenu(emptyPlanets);
-		byte scelta;
-		do {
-			scelta = Input.choice();
-			switch (scelta) {
+
+		if(emptyPlanets){
+			Menu.printAddPlanetMenu();
+			addPlanetOrExit(system);
+		}else{
+			Menu.printAddCelestialBodyMenu();
+			addCelestialBodyOrExit(system);
+		}
+	}
+	//Gets the choice for the add celestial body menu in case there are no planets
+	private static void addPlanetOrExit(SolarSystem system){
+		while (true) {
+			byte choice = Input.choice();
+			switch (choice) {
+				case 1 -> {
+					addPlanet(system);
+					return;
+				}
+				case 2 -> {return;}
+				default -> System.out.println(INVALID_NUMBER);
+			}
+		}
+	}
+	//Gets choice for the add celestial body menu.
+	private static void addCelestialBodyOrExit(SolarSystem system){
+		while (true) {
+			byte choice = Input.choice();
+			switch (choice) {
 				case 1 -> {
 					addPlanet(system);
 					return;
 				}
 				case 2 -> {
-					if (emptyPlanets)
-						return;
 					addMoon(system);
 					return;
 				}
-				case 3 -> {
-					if (emptyPlanets) {
-						System.out.println(INVALID_NUMBER);
-						break;
-					}
-					return;
-				}
+				case 3 -> {return;}
 				default -> System.out.println(INVALID_NUMBER);
 			}
-		} while (true);
+		}
 	}
-
 	//Gets values from user input and creates a new object Planet.
 	private static void addPlanet(SolarSystem system) {
 		Star star = system.getStar();
@@ -98,7 +124,6 @@ public class Planetarium {
 		long mass = Input.readLong(INSERT_PLANET_MASS);
 		star.addNewPlanet(x, y, mass);
 	}
-
 	//Gets values from user input and creates a new object Moon.
 	//If planet code is invalid, it will ask planet's ID again.
 	private static void addMoon(SolarSystem system) {
@@ -122,6 +147,9 @@ public class Planetarium {
 		planet.addNewMoon(x, y, mass);
 	}
 
+
+
+
 	//Main Switch Case 2: print menù and await user input.
 	//If the SolarSystem is empty, the menù will be different.
 	private static void removeCelestialBody(SolarSystem system) {
@@ -129,45 +157,55 @@ public class Planetarium {
 		boolean emptyPlanets = planets.isEmpty();
 		boolean emptyMoons = true;
 
-		if (emptyPlanets) {
-			Menu.printRemoveCelestialBodyMenu(emptyPlanets, emptyMoons);
-			return;
-		} else {
-			for (var planet : planets) {
-				if (!planet.getMoons().isEmpty()) {
-					emptyMoons = false;
-					break;
-				}
+		for (var planet : planets) {
+			if (!planet.getMoons().isEmpty()) {
+				emptyMoons = false;
+				break;
 			}
-			Menu.printRemoveCelestialBodyMenu(emptyPlanets, emptyMoons);
 		}
 
-		byte choice;
-		do {
-			choice = Input.choice();
+		if(emptyPlanets){
+			Menu.printRemoveEmptyMenu();
+		}else if(emptyMoons){
+			Menu.printRemovePlanetMenu();
+			removePlanetOrExit(system);
+		}else{
+			Menu.printRemoveCelestialBodyMenu();
+			removeCelestialBodyOrExit(system);
+		}
+	}
+	//Gets the choice for the menu in case there are no moons in the system.
+	private static void removePlanetOrExit(SolarSystem system){
+		while(true){
+			byte choice = Input.choice();
+			switch (choice) {
+				case 1 -> {
+					removePlanet(system);
+					return;
+				}
+				case 2 -> {return;}
+				default -> System.out.println(INVALID_NUMBER);
+			}
+		}
+	}
+	//Gets the choice for the remove celestial body menu.
+	private static void removeCelestialBodyOrExit(SolarSystem system){
+		while(true){
+			byte choice = Input.choice();
 			switch (choice) {
 				case 1 -> {
 					removePlanet(system);
 					return;
 				}
 				case 2 -> {
-					if (emptyMoons)
-						return;
 					removeMoon(system);
 					return;
 				}
-				case 3 -> {
-					if (emptyMoons) {
-						System.out.println(INVALID_NUMBER);
-						break;
-					}
-					return;
-				}
+				case 3 -> {return;}
 				default -> System.out.println(INVALID_NUMBER);
 			}
-		} while (true);
+		}
 	}
-
 	//Gets planet's ID from user input and remove it.
 	//If planet code is invalid, it will ask planet's ID again.
 	private static void removePlanet(SolarSystem system) {
@@ -181,7 +219,6 @@ public class Planetarium {
 			}
 		}
 	}
-
 	//Gets moon's ID from user input and remove it.
 	//If moon code is invalid, it will ask moon's ID again.
 	private static void removeMoon(SolarSystem system) {
@@ -198,6 +235,10 @@ public class Planetarium {
 		}
 	}
 
+
+
+
+
 	//Main Switch Case 3: asks user to insert CelestialBody's ID.
 	//If ID CelestialBody is found, it'll print all body's properties.
 	private static void infoCelestialBody(SolarSystem system) {
@@ -213,9 +254,17 @@ public class Planetarium {
 		Menu.pressEnterToContinue();
 	}
 
+
+
+
 	//Main Switch Case 4: prints the list of all bodies in the SolarSystem.
 	private static void showListCelestialBodies(SolarSystem system) {
 		Menu.clearConsole();
+		printCelestialBodyTree(system);
+		Menu.pressEnterToContinue();
+	}
+	//Prints the structure of the entire solar system
+	private static void printCelestialBodyTree(SolarSystem system){
 		var star = system.getStar();
 		var planets = star.getPlanets();
 
@@ -237,16 +286,21 @@ public class Planetarium {
 				System.out.println("        |__ " + moon.getIdentifier() + "\t" + moon);
 			}
 		}
-		Menu.pressEnterToContinue();
 	}
+
+
+
 
 	//Main Switch Case 5: calculates and prints the center of mass.
 	private static void getCenterOfMass(SolarSystem system) {
 		Position centerOfMass = system.getCenterOfMass();
 		Menu.clearConsole();
-		System.out.println("Il centro di massa è alle coordinate (" + centerOfMass.getX() + ", " + centerOfMass.getY() + ")");
+		System.out.printf("Il centro di massa è alle coordinate ( %.3f, %.3f )\n",centerOfMass.getX(),centerOfMass.getY());
 		Menu.pressEnterToContinue();
 	}
+
+
+
 
 	//Main Switch Case 6: prompts the user to enter the ID of the starting and ending Celestial Body.
 	private static void calculateRoute(SolarSystem system) {
@@ -259,7 +313,7 @@ public class Planetarium {
 
 				path = system.findPath(id1, id2);
 				break;
-			} catch(Exception e) {
+			} catch(PathBetweenDifferentSystemException e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -267,6 +321,9 @@ public class Planetarium {
 		System.out.println(path.concat("\n\n"));
 		Menu.pressEnterToContinue();
 	}
+
+
+
 
 	//Main Switch Case 7: it prints if there could be collisions.
 	private static void showCollisions(SolarSystem system) {
@@ -278,52 +335,52 @@ public class Planetarium {
 		Menu.pressEnterToContinue();
 	}
 
+
+
+
 	//Main Switch Case 8: automatically generates planets and moons.
-	private static Object generateTest(SolarSystem system) {
+	private static void generateTest(SolarSystem system) {
 		Star star = system.getStar();
 		int numOfPlanets, numOfMoons;
 
 		Menu.clearConsole();
 		System.out.println("Genera randomicamente i pianeti e le lune per te ;)");
 
-		while(true) {
-			numOfPlanets = Input.readInt(String.format("\nQuanti pianeti vuoi generare? [Max %d]\nInserisci una quantita': ",Star.MAX_NUMBER_OF_PLANETS));
+		numOfPlanets = getNumberOfBodiesToTest(NUMBER_OF_PLANET_TO_GENERATE_PROMPT
+				,GENERATE_PLANET_ERROR_MESSAGE,Star.MAX_NUMBER_OF_PLANETS);
+		numOfMoons = getNumberOfBodiesToTest(NUMBER_OF_MOONS_PER_PLANET_TO_GENERATE_PROMPT
+				,GENERATE_MOON_ERROR_MESSAGE,Planet.MAX_NUMBER_OF_MOONS);
 
-			if (numOfPlanets <= Star.MAX_NUMBER_OF_PLANETS)
-				break;
-			System.out.printf("Sono ammessi un massimo di %d pianeti!",Star.MAX_NUMBER_OF_PLANETS);
+		generateTestCelestialBodies(star,numOfPlanets);
+		for(var planet : star.getPlanets()){
+			generateTestCelestialBodies(planet,numOfMoons);
+		}
+	}
+	//Gets how many of a type of celestial body to generate for the testing.
+	private static int getNumberOfBodiesToTest(String message, String errorMessage,long maxNumber){
+		while(true) {
+			int numberOfBodiesToTest = Input.readInt(String.format(message,maxNumber));
+
+			if (numberOfBodiesToTest <= maxNumber)
+				return numberOfBodiesToTest;
+
+			System.out.printf(errorMessage,maxNumber);
 			Menu.pressEnterToContinue();
 			Menu.clearConsole();
 		}
-
-		while(true) {
-			numOfMoons = Input.readInt(String.format("\nQuante lune vuoi generare per pianeta? [Max %d]\nInserisci una quantita': ",Planet.MAX_NUMBER_OF_MOONS));
-
-			if (numOfMoons <= Planet.MAX_NUMBER_OF_MOONS)
-				break;
-			System.out.printf("Sono ammessi un massimo di %d lune!",Planet.MAX_NUMBER_OF_MOONS);
-			Menu.pressEnterToContinue();
-			Menu.clearConsole();
-		}
-
+	}
+	//Generates the celestial bodies to test.
+	private static void generateTestCelestialBodies(CelestialBody parent, int numberOfBodiesToGenerate){
 		Random random = new Random();
 
-		for (int i=0; i<numOfPlanets; i++) {
-			double x = random.nextDouble()*100000;
-			double y = random.nextDouble()*100000;
-			long mass = Math.abs(random.nextLong()%100000 + 1);
-			star.addNewPlanet(x, y, mass);
-		}
+		int maxVal = (parent instanceof Star ? 100000 : 1000);
 
-		for (var planet : star.getPlanets()) {
-			for (int i=0; i<numOfMoons; i++) {
-				double x = random.nextDouble()*10000;
-				double y = random.nextDouble()*10000;
-				long mass = Math.abs(random.nextLong()%10000 + 1);
-				planet.addNewMoon(x, y, mass);
-			}
+		for (int i=0; i<numberOfBodiesToGenerate; i++) {
+			double x = random.nextDouble()*maxVal;
+			double y = random.nextDouble()*maxVal;
+			long mass = Math.abs(random.nextLong()%maxVal + 1);
+			if(parent instanceof Star star) star.addNewPlanet(x, y, mass);
+			else if(parent instanceof Planet planet) planet.addNewMoon(x, y, mass);
 		}
-
-		return null;
 	}
 }

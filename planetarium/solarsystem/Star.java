@@ -20,14 +20,14 @@ public class Star extends CelestialBody {
      */
     public static final int MAX_NUMBER_OF_PLANETS = 26000;
 
-    //Package-private because it should be instantiated ONLY from a SolarSystem's constructor.
-    Star(Position starPosition, long starMass) {
+    //Protected because it should be instantiated ONLY from a SolarSystem's constructor.
+    protected Star(Position starPosition, long starMass) {
         super(starPosition, starMass, "S" + (numberOfStars + 1));
         planets = new ArrayList<>();
         numberOfStars++;
     }
-    //Package-private because it should be instantiated ONLY from a SolarSystem's constructor.
-    Star(double x, double y, long starMass) {
+    //Protected because it should be instantiated ONLY from a SolarSystem's constructor.
+    protected Star(double x, double y, long starMass) {
         this(new Position(x,y), starMass);
     }
 
@@ -53,7 +53,7 @@ public class Star extends CelestialBody {
     }
 
     //Counter of planets created around the star, used to make unique identifiers.
-    int getNumberOfPlanets() {
+    protected int getNumberOfPlanets() {
         return numberOfPlanets;
     }
 
@@ -103,7 +103,7 @@ public class Star extends CelestialBody {
     }
 
     //Removes a planet given its instance
-    void removeOldPlanet(Planet planetToRemove) {
+    protected void removeOldPlanet(Planet planetToRemove) {
         planets.remove(planetToRemove);
     }
 
@@ -121,7 +121,7 @@ public class Star extends CelestialBody {
 
 
     //Returns a list with the Star and the Planet as elements representing the path between them.
-    ArrayList<CelestialBody> pathToPlanet(Planet planetToGo) throws PathBetweenDifferentSystemException {
+    protected ArrayList<CelestialBody> pathToPlanet(Planet planetToGo) throws PathBetweenDifferentSystemException {
         if(!planetToGo.getStar().getIdentifier().equals(getIdentifier()))
             throw new PathBetweenDifferentSystemException(this,planetToGo);
 

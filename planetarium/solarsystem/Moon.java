@@ -8,14 +8,14 @@ import java.util.ArrayList;
 public class Moon extends CelestialBody {
     private Planet planet;
 
-    //Package-private because it should be instantiated ONLY from a Planet object's appropriate method.
-    Moon(Position moonPosition, long moonMass, Planet planet) {
+    //Protected because it should be instantiated ONLY from a Planet object's appropriate method.
+    protected Moon(Position moonPosition, long moonMass, Planet planet) {
         super(moonPosition, moonMass, planet.getIdentifier() + "M" + (planet.getNumberOfMoons() + 1));
         this.planet = planet;
     }
 
-    //Package-private because it should be instantiated ONLY from a Planet object's appropriate method.
-    Moon(double x, double y, long moonMass, Planet planet) {
+    //Protected because it should be instantiated ONLY from a Planet object's appropriate method.
+    protected Moon(double x, double y, long moonMass, Planet planet) {
         this(new Position(x,y), moonMass, planet);
     }
 
@@ -58,7 +58,7 @@ public class Moon extends CelestialBody {
     }
 
     //Returns a list with the Moon and its  Planet as elements.
-    ArrayList<CelestialBody> pathToPlanet() {
+    protected ArrayList<CelestialBody> pathToPlanet() {
         var path = new ArrayList<CelestialBody>();
         path.add(this);
         path.add(getPlanet());
