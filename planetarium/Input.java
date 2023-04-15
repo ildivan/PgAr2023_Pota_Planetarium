@@ -4,7 +4,6 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Input {
-
     private static final String INPUT_INVALID_FORMAT = "Attenzione: il dato inserito non e' nel formato corretto";
 	private static final String INPUT_NUMBER_DESIRED = "\nDigita il numero dell'opzione desiderata > ";
     private static final Scanner scanner = createScanner();
@@ -23,6 +22,7 @@ public class Input {
 			System.out.print(INPUT_NUMBER_DESIRED);
 			try {
 				choice = scanner.nextByte();
+				System.out.println("\n");
 				return choice;
 			} catch (InputMismatchException e) {
 				System.out.println(INPUT_INVALID_FORMAT);
@@ -35,9 +35,10 @@ public class Input {
 	 * Read user input and confirm it is a valid long number.
 	 * @return A long number representing a celestial body coordinate or his mass.
 	 */
-	public static long readLong() {
+	public static long readLong(String message) {
 		long input;
 		do {
+			System.out.print(message);
 			try {
 				input = scanner.nextLong();
 				return input;
@@ -53,9 +54,10 @@ public class Input {
 	 * If the user unintentionally inserts a space, it will be removed.
 	 * @return A String representing the celestial ID.
 	 */
-	public static String readString() {
+	public static String readString(String message) {
 		String input;
 		do {
+			System.out.println("");
 			try {
 				input = scanner.next().replaceAll(" ", "");
 				return input;

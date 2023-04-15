@@ -38,6 +38,7 @@ public class Menu {
 
 	// Menù for adding celestial bodies
 	protected static void printAddCelestialBodyMenu(boolean emptyPlanets) {
+		clearConsole();
 		System.out.println(getFrame());
 		System.out.println("	1. Aggiungi nuovo Pianeta");
 		if (emptyPlanets) {
@@ -50,6 +51,7 @@ public class Menu {
 
 	// Menù for removing celestial bodies
 	protected static void printRemoveCelestialBodyMenu(boolean emptyPlanets, boolean emptyMoons) {
+		clearConsole();
 		System.out.println(getFrame());
 		if (emptyPlanets) {
 			System.out.println("Hey, cosa stai cercando? Il sistema e' vuoto!");
