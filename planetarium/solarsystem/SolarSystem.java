@@ -1,5 +1,8 @@
 package planetarium.solarsystem;
 
+import planetarium.solarsystem.error.CelestialBodyNotFoundException;
+import planetarium.solarsystem.error.PathBetweenDifferentSystemException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -107,23 +110,23 @@ public class SolarSystem {
      * @return The instance of the celestial body, may return null if it does not exist.
      * @see CelestialBody
      */
-    public CelestialBody findCelestialBody(String identifier) {
+    public CelestialBody findCelestialBody(String identifier) throws CelestialBodyNotFoundException{
         var star = getStar();
         if(identifier.equals(star.getIdentifier()))
             return star;
 
-        var searchedPlanet = star.findPlanet(identifier);
-        if(searchedPlanet != null)
-            return searchedPlanet;
-
-        for(var planet : star.getPlanets()) {
-            var searchedMoon = planet.findMoon(identifier);
-            if(searchedMoon != null)
-                return searchedMoon;
+        try{
+            return star.findPlanet(identifier);
+        }catch(CelestialBodyNotFoundException planetNotFound){
+            for(var planet : star.getPlanets()){
+                try{
+                    return planet.findMoon(identifier);
+                }catch(CelestialBodyNotFoundException ignored) {}
+            }
         }
-
-        return null;
+        throw new CelestialBodyNotFoundException(identifier);
     }
+
 
 
 
@@ -254,46 +257,46 @@ public class SolarSystem {
      * @param endIdentifier Identifier of the celestial body at the end of the path.
      * @return A string that represents the path between the two celestial bodies.
      */
-    public String findPath(String startIdentifier, String endIdentifier) throws IllegalArgumentException {
-
-        CelestialBody start = findCelestialBody(startIdentifier);
-        CelestialBody end = findCelestialBody(endIdentifier);
-        if(start == null || end == null)
-            throw new IllegalArgumentException("Identificatori non validi.");
+    public String findPath(String startIdentifier,String endIdentifier) throws PathBetweenDifferentSystemException{
+        CelestialBody start;
+        CelestialBody end;
+        try{
+            start = findCelestialBody(startIdentifier);
+            end = findCelestialBody(endIdentifier);
+        }catch(CelestialBodyNotFoundException e){
+            return e.getMessage();
+        }
 
         //Check if the start and end are the same.
         if(startIdentifier.equals(endIdentifier))
             return "Nessun percorso richiesto.";
 
-        ArrayList<CelestialBody> path = null;
-
         //Casts the start and end into their specific type of CelestialBody and produces the path accordingly.
-        if(start instanceof Moon startMoon) {
-            if(end instanceof Moon endMoon) {
-                path =  moonToMoon(startMoon, endMoon);
-            } else if (end instanceof Planet endPlanet) {
-                path =  moonToPlanet(startMoon, endPlanet);
-            } else if (end instanceof Star endStar) {
-                path =  moonToStar(startMoon, endStar);
+        if(start instanceof Moon startMoon){
+            if(end instanceof Moon endMoon){
+                return pathToString(moonToMoon(startMoon,endMoon));
+            } else if (end instanceof Planet endPlanet){
+                return pathToString(moonToPlanet(startMoon,endPlanet));
+            } else if (end instanceof Star endStar){
+                return pathToString(moonToStar(startMoon,endStar));
             }
-        } else if (start instanceof Planet startPlanet) {
-            if(end instanceof Moon endMoon) {
-                path =  planetToMoon(startPlanet, endMoon);
-            } else if (end instanceof Planet endPlanet) {
-                path =  planetToPlanet(startPlanet, endPlanet);
-            } else if (end instanceof Star endStar) {
-                path =  planetToStar(startPlanet, endStar);
+        } else if (start instanceof Planet startPlanet){
+            if(end instanceof Moon endMoon){
+                return pathToString(planetToMoon(startPlanet,endMoon));
+            } else if (end instanceof Planet endPlanet){
+                return pathToString(planetToPlanet(startPlanet,endPlanet));
+            } else if (end instanceof Star endStar){
+                return pathToString(planetToStar(startPlanet,endStar));
             }
-        } else if (start instanceof Star startStar) {
-            if (end instanceof Moon endMoon) {
-                path =  starToMoon(startStar, endMoon);
-            } else if (end instanceof Planet endPlanet) {
-                path =  starToPlanet(startStar, endPlanet);
+        } else if (start instanceof Star startStar){
+            if (end instanceof Moon endMoon){
+                return pathToString(starToMoon(startStar,endMoon));
+            } else if (end instanceof Planet endPlanet){
+                return pathToString(starToPlanet(startStar,endPlanet));
             }
         }
 
-        return pathToString(path);
-
+        throw new PathBetweenDifferentSystemException(start,end);
     }
 
     //Converts list of celestial bodies to a string representing a path.
@@ -310,58 +313,67 @@ public class SolarSystem {
         return sPath;
     }
 
-    private ArrayList<CelestialBody> moonToMoon(Moon start, Moon end) {
-        var path = moonToPlanet(start, end.getPlanet());
+
+    private ArrayList<CelestialBody> moonToMoon(Moon start, Moon end) throws PathBetweenDifferentSystemException{
+        var path = moonToPlanet(start,end.getPlanet());
         path.add(end);
         return path;
     }
 
-    private ArrayList<CelestialBody> moonToPlanet(Moon start, Planet end) {
-        var path = planetToMoon(end, start);
-        Collections.reverse(path);
-        return path;
-    }
 
-    private ArrayList<CelestialBody> moonToStar(Moon start, Star end) {
-        var path = starToMoon(end, start);
+    private ArrayList<CelestialBody> moonToPlanet(Moon start, Planet end) throws PathBetweenDifferentSystemException{
+        var path = planetToMoon(end,start);
         Collections.reverse(path);
         return path;
     }
 
 
+    private ArrayList<CelestialBody> moonToStar(Moon start, Star end) throws PathBetweenDifferentSystemException{
+        var path = starToMoon(end,start);
+        Collections.reverse(path);
+        return path;
+    }
 
-    private ArrayList<CelestialBody> planetToMoon(Planet start, Moon end) {
-        //Checks if the moon is not orbiting the planet
-        if(!end.getPlanet().getIdentifier().equals(start.getIdentifier())) {
-            var path = planetToPlanet(start, end.getPlanet());
+
+
+
+    private ArrayList<CelestialBody> planetToMoon(Planet start, Moon end) throws PathBetweenDifferentSystemException{
+        try{
+            return start.pathToMoon(end);
+        }catch(CelestialBodyNotFoundException e){
+            //Only executed if the moon does not orbit the planet
+            var path = planetToPlanet(start,end.getPlanet());
             path.add(end);
             return path;
         }
 
-        return start.pathToMoon(end);
     }
 
-    private ArrayList<CelestialBody> planetToPlanet(Planet start, Planet end) {
-        var path = planetToStar(start, end.getStar());
+
+    private ArrayList<CelestialBody> planetToPlanet(Planet start, Planet end) throws PathBetweenDifferentSystemException{
+        var path = planetToStar(start,end.getStar());
         path.add(end);
         return path;
     }
 
-    private ArrayList<CelestialBody> planetToStar(Planet start, Star end) {
-        var path = starToPlanet(end, start);
+
+    private ArrayList<CelestialBody> planetToStar(Planet start, Star end) throws PathBetweenDifferentSystemException{
+        var path = starToPlanet(end,start);
         Collections.reverse(path);
         return path;
     }
 
 
 
-    private ArrayList<CelestialBody> starToMoon(Star start, Moon end) {
+
+    private ArrayList<CelestialBody> starToMoon(Star start, Moon end) throws PathBetweenDifferentSystemException {
         var path = start.pathToPlanet(end.getPlanet());
         path.add(end);
         return path;
     }
 
-    private ArrayList<CelestialBody> starToPlanet(Star start, Planet end) {
+
+    private ArrayList<CelestialBody> starToPlanet(Star start, Planet end) throws PathBetweenDifferentSystemException{
         return start.pathToPlanet(end);
     }
 

@@ -1,5 +1,9 @@
 package planetarium.solarsystem;
 
+import planetarium.solarsystem.error.CelestialBodyNotFoundException;
+import planetarium.solarsystem.error.PathBetweenDifferentSystemException;
+
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,12 +67,13 @@ public class Star extends CelestialBody {
      * @return The instance of the planet searched. May return null if the planet is not found.
      * @see Planet
      */
-    public Planet findPlanet(String identifier) {
-        for(var planet : getPlanets()) {
-            if(identifier.equals(planet.getIdentifier()))
+    public Planet findPlanet(String identifier) throws CelestialBodyNotFoundException{
+        for(var planet : getPlanets()){
+            if(identifier.equals(planet.getIdentifier())){
                 return planet;
+            }
         }
-        return null;
+        throw new CelestialBodyNotFoundException(identifier);
     }
 
     /**
@@ -108,17 +113,17 @@ public class Star extends CelestialBody {
      * @param identifier The identifier of the planet to be removed.
      * @see Planet
      */
-    public void removeOldPlanet(String identifier) {
-        Planet planetToRemove = findPlanet(identifier);
-        if(planetToRemove != null)
-            planetToRemove.removeFromSystem();
+    public void removeOldPlanet(String identifier){
+        try{
+            findPlanet(identifier).removeFromSystem();
+        }catch(CelestialBodyNotFoundException ignored){}
     }
 
 
-    //Returns a list with the Star and the Planet as elements.
-    ArrayList<CelestialBody> pathToPlanet(Planet planetToGo) throws IllegalArgumentException {
+    //Returns a list with the Star and the Planet as elements representing the path between them.
+    ArrayList<CelestialBody> pathToPlanet(Planet planetToGo) throws PathBetweenDifferentSystemException {
         if(!planetToGo.getStar().getIdentifier().equals(getIdentifier()))
-            throw new IllegalArgumentException("I corpi celesti non appartengono allo stesso sistema.");
+            throw new PathBetweenDifferentSystemException(this,planetToGo);
 
         var path = new ArrayList<CelestialBody>();
         path.add(this);

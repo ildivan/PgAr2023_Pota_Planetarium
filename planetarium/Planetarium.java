@@ -1,6 +1,7 @@
 package planetarium;
 
 import planetarium.solarsystem.*;
+import planetarium.solarsystem.error.CelestialBodyNotFoundException;
 
 public class Planetarium {
 	private static final String INVALID_NUMBER = "ATTENZIONE: Il numero inserito non e' valido!";
@@ -83,19 +84,24 @@ public class Planetarium {
 	private static void addMoon(SolarSystem system) {
 		String id;
 		Star star = system.getStar();
+		Planet planet;
 
 		while(true) {
 			id = Input.readString("Inserire ID del pianeta della luna: ");
 
-			if(star.findPlanet(id) != null)
+			try{
+				planet = star.findPlanet(id);
 				break;
-			System.out.println("Pianeta non trovato.");
+			}catch(CelestialBodyNotFoundException e){
+				System.out.println(e.getMessage());
+			}
+
 		}
 
 		long x = Input.readLong("Inserire coordinata X della luna (relativa al suo pianeta): ");
 		long y = Input.readLong("Inserire coordinata Y della luna (relativa al suo pianeta): ");
 		long mass = Input.readLong("Inserire la massa della luna [MKg]: ");
-		star.findPlanet(id).addNewMoon(x, y, mass);
+		planet.addNewMoon(x, y, mass);
 	}
 
 	private static void removeCelestialBody(SolarSystem system) {
@@ -143,38 +149,41 @@ public class Planetarium {
 	}
 
 	private static void removePlanet(SolarSystem system) {
-		Planet planet;
 		while (true) {
 			String idPlanet = Input.readString("Inserire ID del pianeta da rimuovere: ");
-			if (system.findCelestialBody(idPlanet) instanceof Planet found) {
-				planet = found;
-				break;
+			try{
+				system.getStar().findPlanet(idPlanet).removeFromSystem();
+				return;
+			}catch(CelestialBodyNotFoundException e){
+				System.out.println(e.getMessage());
 			}
-			System.out.println("Pianeta non esistente, oppure non è un pianeta.");
 		}
-		planet.removeFromSystem();
 	}
 
 	private static void removeMoon(SolarSystem system) {
-		Moon moon;
 		while(true){
 			String idLuna = Input.readString("\nInserire ID della luna: ");
-			if (system.findCelestialBody(idLuna) instanceof Moon found) {
-				moon = found;
-				break;
+
+			try{
+				var found = (Moon)(system.findCelestialBody(idLuna));
+				found.removeFromSystem();
+				return;
+			}catch(Exception e){
+				System.out.println(e.getMessage());
 			}
-			System.out.println("Luna non esistente, oppure non è una luna.");
 		}
-		moon.removeFromSystem();
 	}
 
 	private static void infoCelestialBody(SolarSystem system) {
 		Menu.clearConsole();
-		var body = system.findCelestialBody(Input.readString("Inserire ID del corpo celeste: "));
-		if (body != null)
-			System.out.println("\n" + body);
-		else
-			System.out.println("\nCorpo celeste non trovato. L'ID e' corretto?");
+
+		try{
+			var body = system.findCelestialBody(Input.readString("Inserire ID del corpo celeste: "));
+			System.out.printf("\n%s\n",body);
+		}catch(CelestialBodyNotFoundException e){
+			System.out.printf("\n%s\n",e.getMessage());
+		}
+
 		Menu.pressEnterToContinue();
 	}
 
@@ -221,7 +230,7 @@ public class Planetarium {
 
 				path = system.findPath(id1, id2);
 				break;
-			}catch(IllegalArgumentException e){
+			}catch(Exception e){
 				System.out.println(e.getMessage());
 			}
 		}

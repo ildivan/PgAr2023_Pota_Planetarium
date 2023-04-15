@@ -1,5 +1,8 @@
 package planetarium.solarsystem;
 
+import planetarium.solarsystem.error.CelestialBodyNotFoundException;
+import planetarium.solarsystem.error.PathBetweenDifferentSystemException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,12 +73,13 @@ public class Planet extends CelestialBody {
      * @return The instance of the moon searched. May return null if the moon is not found.
      * @see Moon
      */
-    public Moon findMoon(String identifier) {
-        for(var moon : getMoons()) {
-            if(identifier.equals(moon.getIdentifier()))
+    public Moon findMoon(String identifier) throws CelestialBodyNotFoundException{
+        for(var moon : getMoons()){
+            if(identifier.equals(moon.getIdentifier())){
                 return moon;
+            }
         }
-        return null;
+        throw new CelestialBodyNotFoundException(identifier);
     }
 
     /**
@@ -115,10 +119,11 @@ public class Planet extends CelestialBody {
      * @param identifier The identifier of the moon to be removed.
      * @see Moon
      */
-    public void removeOldMoon(String identifier) {
-        Moon moonToDelete = findMoon(identifier);
-        if(moonToDelete != null)
+    public void removeOldMoon(String identifier){
+        try{
+            Moon moonToDelete = findMoon(identifier);
             moonToDelete.removeFromSystem();
+        }catch(CelestialBodyNotFoundException ignored){}
     }
 
     /**
@@ -149,9 +154,9 @@ public class Planet extends CelestialBody {
     }
 
     //Returns a list with the Planet and the Moon as elements, throw exception if the moon does not orbit the planet.
-    ArrayList<CelestialBody> pathToMoon(Moon moonToGo) throws IllegalArgumentException {
+    ArrayList<CelestialBody> pathToMoon(Moon moonToGo) throws CelestialBodyNotFoundException{
         if(!moonToGo.getPlanet().getIdentifier().equals(getIdentifier()))
-            throw new IllegalArgumentException("La luna non appartiene al pianeta");
+            throw new CelestialBodyNotFoundException(moonToGo);
 
         var path = new ArrayList<CelestialBody>();
         path.add(this);
