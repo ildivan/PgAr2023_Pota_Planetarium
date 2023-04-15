@@ -75,7 +75,7 @@ public class Input {
 	public static String readString(String message) {
 		String input;
 		do {
-			System.out.println("");
+			System.out.print(message);
 			try {
 				input = scanner.next().replaceAll(" ", "");
 				return input;
