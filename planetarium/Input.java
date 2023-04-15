@@ -32,6 +32,24 @@ public class Input {
 	}
 
 	/**
+	 * Read user input and confirm it is a valid int number.
+	 * @return A int number representing the amount of planets or moons to generate.
+	 */
+	public static int readInt(String message) {
+		int input;
+		do {
+			System.out.print(message);
+			try {
+				input = scanner.nextInt();
+				return input;
+			} catch (InputMismatchException e) {
+				System.out.println(INPUT_INVALID_FORMAT);
+				scanner.next();
+			}
+		} while (true);
+	}
+
+	/**
 	 * Read user input and confirm it is a valid long number.
 	 * @return A long number representing a celestial body coordinate or his mass.
 	 */

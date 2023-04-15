@@ -110,18 +110,18 @@ public class SolarSystem {
      * @return The instance of the celestial body, may return null if it does not exist.
      * @see CelestialBody
      */
-    public CelestialBody findCelestialBody(String identifier) throws CelestialBodyNotFoundException{
+    public CelestialBody findCelestialBody(String identifier) throws CelestialBodyNotFoundException {
         var star = getStar();
         if(identifier.equals(star.getIdentifier()))
             return star;
 
-        try{
+        try {
             return star.findPlanet(identifier);
-        }catch(CelestialBodyNotFoundException planetNotFound){
-            for(var planet : star.getPlanets()){
-                try{
+        } catch(CelestialBodyNotFoundException planetNotFound) {
+            for(var planet : star.getPlanets()) {
+                try {
                     return planet.findMoon(identifier);
-                }catch(CelestialBodyNotFoundException ignored) {}
+                } catch(CelestialBodyNotFoundException ignored) {}
             }
         }
         throw new CelestialBodyNotFoundException(identifier);
@@ -257,13 +257,13 @@ public class SolarSystem {
      * @param endIdentifier Identifier of the celestial body at the end of the path.
      * @return A string that represents the path between the two celestial bodies.
      */
-    public String findPath(String startIdentifier,String endIdentifier) throws PathBetweenDifferentSystemException{
+    public String findPath(String startIdentifier,String endIdentifier) throws PathBetweenDifferentSystemException {
         CelestialBody start;
         CelestialBody end;
-        try{
+        try {
             start = findCelestialBody(startIdentifier);
             end = findCelestialBody(endIdentifier);
-        }catch(CelestialBodyNotFoundException e){
+        } catch(CelestialBodyNotFoundException e) {
             return e.getMessage();
         }
 
@@ -338,9 +338,9 @@ public class SolarSystem {
 
 
     private ArrayList<CelestialBody> planetToMoon(Planet start, Moon end) throws PathBetweenDifferentSystemException{
-        try{
+        try {
             return start.pathToMoon(end);
-        }catch(CelestialBodyNotFoundException e){
+        } catch(CelestialBodyNotFoundException e) {
             //Only executed if the moon does not orbit the planet
             var path = planetToPlanet(start,end.getPlanet());
             path.add(end);

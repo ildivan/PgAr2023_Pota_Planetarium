@@ -22,7 +22,8 @@ public class Planetarium {
 				case 5 -> getCenterOfMass(system);
 				case 6 -> calculateRoute(system);
 				case 7 -> showCollisions(system);
-				case 8 -> {
+				case 8 -> generateTest(system);
+				case 9 -> {
 					return;
 				}
 				default -> System.out.println(INVALID_NUMBER);
@@ -31,6 +32,7 @@ public class Planetarium {
 		} while (true);
 	}
 
+	//First interaction with user.
 	private static SolarSystem introduction() {
 		Menu.clearConsole();
 		System.out.println("Hey, da qualche parte bisogna pur cominciare...\n");
@@ -43,6 +45,8 @@ public class Planetarium {
 		return new SolarSystem(x, y, mass);
 	}
 
+	//Main Switch Case 1: print menù and await user input.
+	//If the SolarSystem is empty, the menù will be different.
 	private static void addCelestialBody(SolarSystem system) {
 		Star star = system.getStar();
 		boolean emptyPlanets = star.getPlanets().isEmpty();
@@ -73,6 +77,7 @@ public class Planetarium {
 		} while (true);
 	}
 
+	//Gets values from user input and creates a new object Planet.
 	private static void addPlanet(SolarSystem system) {
 		Star star = system.getStar();
 		long x = Input.readLong("Inserire coordinata X del pianeta (relativa alla sua stella): ");
@@ -81,21 +86,21 @@ public class Planetarium {
 		star.addNewPlanet(x, y, mass);
 	}
 
+	//Gets values from user input and creates a new object Moon.
+	//If planet code is invalid, it will ask planet's ID again.
 	private static void addMoon(SolarSystem system) {
 		String id;
 		Star star = system.getStar();
 		Planet planet;
 
 		while(true) {
-			id = Input.readString("Inserire ID del pianeta della luna: ");
-
-			try{
+			try {
+				id = Input.readString("Inserire ID del pianeta della luna: ");
 				planet = star.findPlanet(id);
 				break;
-			}catch(CelestialBodyNotFoundException e){
+			} catch(CelestialBodyNotFoundException e) {
 				System.out.println(e.getMessage());
 			}
-
 		}
 
 		long x = Input.readLong("Inserire coordinata X della luna (relativa al suo pianeta): ");
@@ -104,6 +109,8 @@ public class Planetarium {
 		planet.addNewMoon(x, y, mass);
 	}
 
+	//Main Switch Case 2: print menù and await user input.
+	//If the SolarSystem is empty, the menù will be different.
 	private static void removeCelestialBody(SolarSystem system) {
 		var planets = system.getStar().getPlanets();
 		boolean emptyPlanets = planets.isEmpty();
@@ -148,45 +155,52 @@ public class Planetarium {
 		} while (true);
 	}
 
+	//Gets planet's ID from user input and remove it.
+	//If planet code is invalid, it will ask planet's ID again.
 	private static void removePlanet(SolarSystem system) {
 		while (true) {
 			String idPlanet = Input.readString("Inserire ID del pianeta da rimuovere: ");
-			try{
+			try {
 				system.getStar().findPlanet(idPlanet).removeFromSystem();
 				return;
-			}catch(CelestialBodyNotFoundException e){
+			} catch(CelestialBodyNotFoundException e) {
 				System.out.println(e.getMessage());
 			}
 		}
 	}
 
+	//Gets moon's ID from user input and remove it.
+	//If moon code is invalid, it will ask moon's ID again.
 	private static void removeMoon(SolarSystem system) {
 		while(true){
 			String idLuna = Input.readString("\nInserire ID della luna: ");
 
-			try{
+			try {
 				var found = (Moon)(system.findCelestialBody(idLuna));
 				found.removeFromSystem();
 				return;
-			}catch(Exception e){
+			} catch(Exception e) {
 				System.out.println(e.getMessage());
 			}
 		}
 	}
 
+	//Main Switch Case 3: asks user to insert CelestialBody's ID.
+	//If ID CelestialBody is found, it'll print all body's properties.
 	private static void infoCelestialBody(SolarSystem system) {
 		Menu.clearConsole();
 
-		try{
+		try {
 			var body = system.findCelestialBody(Input.readString("Inserire ID del corpo celeste: "));
 			System.out.printf("\n%s\n",body);
-		}catch(CelestialBodyNotFoundException e){
+		} catch(CelestialBodyNotFoundException e) {
 			System.out.printf("\n%s\n",e.getMessage());
 		}
 
 		Menu.pressEnterToContinue();
 	}
 
+	//Main Switch Case 4: prints the list of all bodies in the SolarSystem.
 	private static void showListCelestialBodies(SolarSystem system) {
 		Menu.clearConsole();
 		var star = system.getStar();
@@ -194,7 +208,7 @@ public class Planetarium {
 
 		System.out.println(star.getIdentifier());
 
-		for(int i=0; i < planets.size() - 1; i++){
+		for(int i=0; i < planets.size() - 1; i++) {
 			var planet = planets.get(i);
 			System.out.println(" |__ " + planet.getIdentifier());
 			var moons = planet.getMoons();
@@ -213,6 +227,7 @@ public class Planetarium {
 		Menu.pressEnterToContinue();
 	}
 
+	//Main Switch Case 5: calculates and prints the center of mass.
 	private static void getCenterOfMass(SolarSystem system) {
 		Position centerOfMass = system.getCenterOfMass();
 		Menu.clearConsole();
@@ -220,17 +235,18 @@ public class Planetarium {
 		Menu.pressEnterToContinue();
 	}
 
+	//Main Switch Case 6: prompts the user to enter the ID of the starting and ending Celestial Body.
 	private static void calculateRoute(SolarSystem system) {
 		Menu.clearConsole();
 		String path;
-		while(true){
-			try{
+		while(true) {
+			try {
 				String id1 = Input.readString("Inserire l'identificativo del primo corpo celeste: ");
 				String id2 = Input.readString("Inserire l'identificativo del secondo corpo celeste: ");
 
 				path = system.findPath(id1, id2);
 				break;
-			}catch(Exception e){
+			} catch(Exception e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -239,6 +255,7 @@ public class Planetarium {
 		Menu.pressEnterToContinue();
 	}
 
+	//Main Switch Case 7: it prints if there could be collisions.
 	private static void showCollisions(SolarSystem system) {
 		Menu.clearConsole();
 		if (system.detectCollisions())
@@ -246,5 +263,22 @@ public class Planetarium {
 		else
 			System.out.println("Tutto tranquillo. Nessuna collisione rilevata.");
 		Menu.pressEnterToContinue();
+	}
+
+	//Main Switch Case 8: automatically generates planets and moons.
+	private static Object generateTest(SolarSystem system) {
+		Star star = system.getStar();
+
+		Menu.clearConsole();
+		System.out.println("Genera randomicamente i pianeti e le lune per te ;)");
+		System.out.println("Il quantitativo di lune verra distribuito randomicamente su tutti i pianeti.\n");
+		int numOfPlanets = Input.readInt("Quanti pianeti vuoi generare? Inserisci una quantita': ");
+		int numOfMoons = Input.readInt("Quante lune vuoi generare in totale? Inserisci una quantita': ");
+
+		/* for (int i=0; i<numOfPlanets; i++) {
+			star.addNewPlanet(Math.random(), y, mass);
+		} */
+
+		return null;
 	}
 }

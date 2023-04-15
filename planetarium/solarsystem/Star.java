@@ -3,7 +3,6 @@ package planetarium.solarsystem;
 import planetarium.solarsystem.error.CelestialBodyNotFoundException;
 import planetarium.solarsystem.error.PathBetweenDifferentSystemException;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,9 +113,9 @@ public class Star extends CelestialBody {
      * @see Planet
      */
     public void removeOldPlanet(String identifier){
-        try{
+        try {
             findPlanet(identifier).removeFromSystem();
-        }catch(CelestialBodyNotFoundException ignored){}
+        } catch(CelestialBodyNotFoundException ignored) {}
     }
 
 

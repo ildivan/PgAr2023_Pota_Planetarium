@@ -1,7 +1,6 @@
 package planetarium.solarsystem;
 
 import planetarium.solarsystem.error.CelestialBodyNotFoundException;
-import planetarium.solarsystem.error.PathBetweenDifferentSystemException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,10 +119,10 @@ public class Planet extends CelestialBody {
      * @see Moon
      */
     public void removeOldMoon(String identifier){
-        try{
+        try {
             Moon moonToDelete = findMoon(identifier);
             moonToDelete.removeFromSystem();
-        }catch(CelestialBodyNotFoundException ignored){}
+        } catch(CelestialBodyNotFoundException ignored) {}
     }
 
     /**
