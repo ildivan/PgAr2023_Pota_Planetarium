@@ -33,7 +33,8 @@ public class Menu {
 		System.out.println("	5. Ottieni il centro di massa");
 		System.out.println("	6. Calcola rotta tra due corpi");
 		System.out.println("	7. Mostra possibili collisioni");
-		System.out.println("	8. Esci");
+		System.out.println("	8. Genera randomicamente Pianeti e lune (Test)");
+		System.out.println("	9. Esci");
 	}
 
 	// Menù for adding celestial bodies

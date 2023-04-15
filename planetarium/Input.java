@@ -51,7 +51,7 @@ public class Input {
 
 	/**
 	 * Read user input and confirm it is a valid long number.
-	 * @return A long number representing a celestial body coordinate or his mass.
+	 * @return A long number representing a celestial body mass.
 	 */
 	public static long readLong(String message) {
 		long input;
@@ -59,6 +59,24 @@ public class Input {
 			System.out.print(message);
 			try {
 				input = scanner.nextLong();
+				return input;
+			} catch (InputMismatchException e) {
+				System.out.println(INPUT_INVALID_FORMAT);
+				scanner.next();
+			}
+		} while (true);
+	}
+
+	/**
+	 * Read user input and confirm it is a valid double number.
+	 * @return A double number representing a celestial body coordinate.
+	 */
+	public static double readDouble(String message) {
+		double input;
+		do {
+			System.out.print(message);
+			try {
+				input = scanner.nextDouble();
 				return input;
 			} catch (InputMismatchException e) {
 				System.out.println(INPUT_INVALID_FORMAT);

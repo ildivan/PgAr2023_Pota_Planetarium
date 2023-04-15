@@ -103,7 +103,7 @@ public class Planet extends CelestialBody {
      * @param moonMass The new moon's mass.
      * @see Moon
      */
-    public void addNewMoon(long relativeX, long relativeY, long moonMass) {
+    public void addNewMoon(double relativeX, double relativeY, long moonMass) {
         addNewMoon(new Position(relativeX, relativeY), moonMass);
     }
 

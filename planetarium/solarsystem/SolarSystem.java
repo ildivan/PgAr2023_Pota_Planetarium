@@ -35,7 +35,7 @@ public class SolarSystem {
      * @param starMass The mass of the star.
      *
      */
-    public SolarSystem(long x, long y, long starMass) {
+    public SolarSystem(double x, double y, long starMass) {
         this(new Position(x,y), starMass);
     }
 
@@ -302,15 +302,12 @@ public class SolarSystem {
     //Converts list of celestial bodies to a string representing a path.
     //Does not check if the path makes sense, that is up to the methods that creates it.
     private static String pathToString(ArrayList<CelestialBody> path) {
-        if(path == null || path.isEmpty())
-            return "Percorso non supportato.";
-
-        String sPath = String.format("%s ", path.get(0).getIdentifier());
+        StringBuffer sPath = new StringBuffer(String.format("%s ", path.get(0).getIdentifier()));
 
         for(int i = 1; i < path.size(); i++)
-            sPath = sPath.concat(String.format(" > %s", path.get(i).getIdentifier()));
+            sPath.append(String.format(" > %s", path.get(i).getIdentifier()));
 
-        return sPath;
+        return sPath.toString();
     }
 
 

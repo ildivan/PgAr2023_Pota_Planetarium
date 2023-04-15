@@ -97,7 +97,7 @@ public class Star extends CelestialBody {
      * @param planetMass The new planet's mass.
      * @see Planet
      */
-    public void addNewPlanet(long relativeX, long relativeY, long planetMass) {
+    public void addNewPlanet(double relativeX, double relativeY, long planetMass) {
         addNewPlanet(new Position(relativeX, relativeY), planetMass);
     }
 

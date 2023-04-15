@@ -2,10 +2,23 @@ package planetarium;
 
 import planetarium.solarsystem.*;
 import planetarium.solarsystem.error.CelestialBodyNotFoundException;
+import java.util.Random;
 
 public class Planetarium {
 	private static final String INVALID_NUMBER = "ATTENZIONE: Il numero inserito non e' valido!";
 
+	private static final String INSERT_STAR_X = "Inserire la coordinata X della stella: ";
+	private static final String INSERT_STAR_Y = "Inserire la coordinata Y della stella: ";
+	private static final String INSERT_STAR_MASS = "Inserire la massa della stella: ";
+
+	private static final String INSERT_PLANET_X = "Inserire coordinata X del pianeta (relativa alla sua stella): ";
+	private static final String INSERT_PLANET_Y = "Inserire coordinata Y del pianeta (relativa alla sua stella): ";
+	private static final String INSERT_PLANET_MASS = "Inserire la massa del pianeta: ";
+
+	private static final String INSERT_MOON_X = "Inserire coordinata X della luna (relativa al suo pianeta): ";
+	private static final String INSERT_MOON_Y = "Inserire coordinata Y della luna (relativa al suo pianeta): ";
+	private static final String INSERT_MOON_MASS = "Inserire la massa della luna: ";
+	
 	public static void main(String[] args) {
 		SolarSystem system = introduction();
 
@@ -37,16 +50,16 @@ public class Planetarium {
 		Menu.clearConsole();
 		System.out.println("Hey, da qualche parte bisogna pur cominciare...\n");
 
-		long x  = Input.readLong("Inserire la coordinata X della stella: ");
-		long y  = Input.readLong("Inserire la coordinata Y della stella: ");
-		long mass = Input.readLong("Inserire la massa della stella [MKg]: ");
+		double x  = Input.readDouble(INSERT_STAR_X);
+		double y  = Input.readDouble(INSERT_STAR_Y);
+		long mass = Input.readLong(INSERT_STAR_MASS);
 
 		Menu.clearConsole();
 		return new SolarSystem(x, y, mass);
 	}
 
 	//Main Switch Case 1: print menù and await user input.
-	//If the SolarSystem is empty, the menù will be different.
+	//If the SolarSystem is empty, the menu will be different.
 	private static void addCelestialBody(SolarSystem system) {
 		Star star = system.getStar();
 		boolean emptyPlanets = star.getPlanets().isEmpty();
@@ -80,9 +93,9 @@ public class Planetarium {
 	//Gets values from user input and creates a new object Planet.
 	private static void addPlanet(SolarSystem system) {
 		Star star = system.getStar();
-		long x = Input.readLong("Inserire coordinata X del pianeta (relativa alla sua stella): ");
-		long y = Input.readLong("Inserire coordinate Y del pianeta (relativa alla sua stella): ");
-		long mass = Input.readLong("Inserire la massa del pianeta [MKg]: ");
+		double x = Input.readDouble(INSERT_PLANET_X);
+		double y = Input.readDouble(INSERT_PLANET_Y);
+		long mass = Input.readLong(INSERT_PLANET_MASS);
 		star.addNewPlanet(x, y, mass);
 	}
 
@@ -103,9 +116,9 @@ public class Planetarium {
 			}
 		}
 
-		long x = Input.readLong("Inserire coordinata X della luna (relativa al suo pianeta): ");
-		long y = Input.readLong("Inserire coordinata Y della luna (relativa al suo pianeta): ");
-		long mass = Input.readLong("Inserire la massa della luna [MKg]: ");
+		double x = Input.readDouble(INSERT_MOON_X);
+		double y = Input.readDouble(INSERT_MOON_Y);
+		long mass = Input.readLong(INSERT_MOON_MASS);
 		planet.addNewMoon(x, y, mass);
 	}
 
@@ -206,24 +219,24 @@ public class Planetarium {
 		var star = system.getStar();
 		var planets = star.getPlanets();
 
-		System.out.println(star.getIdentifier());
+		System.out.println(star.getIdentifier() + "\t\t\t" + star);
 
 		for(int i=0; i < planets.size() - 1; i++) {
 			var planet = planets.get(i);
-			System.out.println(" |__ " + planet.getIdentifier());
+			System.out.println(" |__ " + planet.getIdentifier() + "\t\t" + planet);
 			var moons = planet.getMoons();
 			for(var moon : moons) {
-				System.out.println(" |      |__ " + moon.getIdentifier());
+				System.out.println(" |      |__ " + moon.getIdentifier() + "\t" + moon);
 			}
+			System.out.println(" |");
 		}
 		var lastPlanet = planets.isEmpty() ? null : planets.get(planets.size()-1);
 		if (lastPlanet != null) {
-			System.out.println(" |__ " + lastPlanet.getIdentifier());
+			System.out.println(" |__ " + lastPlanet.getIdentifier() + "\t\t" + lastPlanet);
 			for(var moon : lastPlanet.getMoons()){
-				System.out.println("        |__ " + moon.getIdentifier());
+				System.out.println("        |__ " + moon.getIdentifier() + "\t" + moon);
 			}
 		}
-
 		Menu.pressEnterToContinue();
 	}
 
@@ -268,16 +281,48 @@ public class Planetarium {
 	//Main Switch Case 8: automatically generates planets and moons.
 	private static Object generateTest(SolarSystem system) {
 		Star star = system.getStar();
+		int numOfPlanets, numOfMoons;
 
 		Menu.clearConsole();
 		System.out.println("Genera randomicamente i pianeti e le lune per te ;)");
-		System.out.println("Il quantitativo di lune verra distribuito randomicamente su tutti i pianeti.\n");
-		int numOfPlanets = Input.readInt("Quanti pianeti vuoi generare? Inserisci una quantita': ");
-		int numOfMoons = Input.readInt("Quante lune vuoi generare in totale? Inserisci una quantita': ");
 
-		/* for (int i=0; i<numOfPlanets; i++) {
-			star.addNewPlanet(Math.random(), y, mass);
-		} */
+		while(true) {
+			numOfPlanets = Input.readInt(String.format("\nQuanti pianeti vuoi generare? [Max %d]\nInserisci una quantita': ",Star.MAX_NUMBER_OF_PLANETS));
+
+			if (numOfPlanets <= Star.MAX_NUMBER_OF_PLANETS)
+				break;
+			System.out.printf("Sono ammessi un massimo di %d pianeti!",Star.MAX_NUMBER_OF_PLANETS);
+			Menu.pressEnterToContinue();
+			Menu.clearConsole();
+		}
+
+		while(true) {
+			numOfMoons = Input.readInt(String.format("\nQuante lune vuoi generare per pianeta? [Max %d]\nInserisci una quantita': ",Planet.MAX_NUMBER_OF_MOONS));
+
+			if (numOfMoons <= Planet.MAX_NUMBER_OF_MOONS)
+				break;
+			System.out.printf("Sono ammessi un massimo di %d lune!",Planet.MAX_NUMBER_OF_MOONS);
+			Menu.pressEnterToContinue();
+			Menu.clearConsole();
+		}
+
+		Random random = new Random();
+
+		for (int i=0; i<numOfPlanets; i++) {
+			double x = random.nextDouble()*100000;
+			double y = random.nextDouble()*100000;
+			long mass = Math.abs(random.nextLong()%100000 + 1);
+			star.addNewPlanet(x, y, mass);
+		}
+
+		for (var planet : star.getPlanets()) {
+			for (int i=0; i<numOfMoons; i++) {
+				double x = random.nextDouble()*10000;
+				double y = random.nextDouble()*10000;
+				long mass = Math.abs(random.nextLong()%10000 + 1);
+				planet.addNewMoon(x, y, mass);
+			}
+		}
 
 		return null;
 	}
