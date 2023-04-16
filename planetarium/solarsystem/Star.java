@@ -41,7 +41,7 @@ public class Star extends CelestialBody {
      * @see Position
      */
     @Override
-    public Position getPosition() {
+    public Position getAbsolutePosition() {
         return getRelativePosition();
     }
 

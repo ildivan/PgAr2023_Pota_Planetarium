@@ -59,21 +59,21 @@ public class SolarSystem {
 
         // Add weighted position of the Star
         final double starMass = getStar().getMass();
-        final Position adjustedStarPosition = getStar().getPosition().multiplyBy(starMass);
+        final Position adjustedStarPosition = getStar().getAbsolutePosition().multiplyBy(starMass);
         centerOfMass.increase(adjustedStarPosition);
 
         // Add weighted positions of the Planets
         final var planets = getStar().getPlanets();
         for(final var planet : planets) {
             final double planetMass = planet.getMass();
-            final Position adjustedPlanetPosition = planet.getPosition().multiplyBy(planetMass);
+            final Position adjustedPlanetPosition = planet.getAbsolutePosition().multiplyBy(planetMass);
             centerOfMass.increase(adjustedPlanetPosition);
 
             final var moons = planet.getMoons();
             // Add weighted positions of the Moons for every Planet
             for(final var moon : moons) {
                 final double moonMass = moon.getMass();
-                final Position adjustedMoonPosition = moon.getPosition().multiplyBy(moonMass);
+                final Position adjustedMoonPosition = moon.getAbsolutePosition().multiplyBy(moonMass);
                 centerOfMass.increase(adjustedMoonPosition);
             }
         }

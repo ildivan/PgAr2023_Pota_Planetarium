@@ -67,7 +67,7 @@ public abstract class CelestialBody {
      * @return Absolute position of the celestial body.
      * @see Position
      */
-    public abstract Position getPosition();
+    public abstract Position getAbsolutePosition();
 
     /**
      * Getter method for the mass.
@@ -92,6 +92,6 @@ public abstract class CelestialBody {
     @Override
     public String toString() {
         String className = getClass().getSimpleName();
-        return String.format("[ %s %s\tmass: %d\tposition: %s]", className, getIdentifier(), getMass(), getPosition());
+        return String.format("[ %s %s\tmass: %d\tposition: %s]", className, getIdentifier(), getMass(), getAbsolutePosition());
     }
 }

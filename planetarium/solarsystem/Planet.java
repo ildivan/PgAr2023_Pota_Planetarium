@@ -44,9 +44,9 @@ public class Planet extends CelestialBody {
      * @see Position
      */
     @Override
-    public Position getPosition() {
+    public Position getAbsolutePosition() {
         Position absolutePosition = getRelativePosition();
-        absolutePosition.increase(getStar().getPosition());
+        absolutePosition.increase(getStar().getAbsolutePosition());
         return absolutePosition;
     }
 

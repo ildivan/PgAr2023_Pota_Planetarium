@@ -25,9 +25,9 @@ public class Moon extends CelestialBody {
      * @see Position
      */
     @Override
-    public Position getPosition() {
+    public Position getAbsolutePosition() {
         Position absolutePosition = getRelativePosition();
-        absolutePosition.increase(getPlanet().getPosition());
+        absolutePosition.increase(getPlanet().getAbsolutePosition());
         return absolutePosition;
     }
 
