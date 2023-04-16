@@ -119,11 +119,9 @@ public class Planet extends CelestialBody {
      * @param identifier The identifier of the moon to be removed.
      * @see Moon
      */
-    public void removeOldMoon(String identifier){
-        try {
-            Moon moonToDelete = findMoon(identifier);
-            moonToDelete.removeFromSystem();
-        } catch(CelestialBodyNotFoundException ignored) {}
+    public void removeOldMoon(String identifier) throws CelestialBodyNotFoundException{
+        Moon moonToDelete = findMoon(identifier);
+        moonToDelete.removeFromSystem();
     }
 
     /**

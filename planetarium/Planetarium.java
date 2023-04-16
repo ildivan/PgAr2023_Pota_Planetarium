@@ -26,6 +26,25 @@ public class Planetarium {
 
 	private static final String GENERATE_PLANET_ERROR_MESSAGE = "Sono ammessi un massimo di %d pianeti!";
 	private static final String GENERATE_MOON_ERROR_MESSAGE = "Sono ammesse un massimo di %d lune per pianeta!";
+	private static final String INSERT_PLANET_ID_FOR_MOON_CREATION = "Inserire ID del pianeta a cui aggiungere la luna: ";
+	private static final String INSERT_PLANET_ID_TO_REMOVE = "Inserire ID del pianeta da rimuovere: ";
+
+	private static final String PLANET_FORMAT = " |__ %s\t\t%s\n";
+	private static final String MOON_FORMAT = " |      |__ %s\t%s\n";
+	private static final String LAST_PLANET_FORMAT = " |__ %s\t\t%s\n";
+	private static final String LAST_PLANET_MOON_FORMAT = "        |__ %s\t%s\n";
+	private static final String STAR_FORMAT = "%s\t\t\t%s\n";
+	
+	private static final String INSERT_MOON_ID = "\nInserire ID della luna: ";
+	private static final String NOT_A_MOON_ID = "Non hai inserito l'id di una luna.";
+	private static final String CENTER_OF_MASS_FORMAT = "Il centro di massa è alle coordinate ( %.3f, %.3f )\n";
+	private static final String INSERT_CELESTIAL_BODY_ID = "Inserire ID del corpo celeste: ";
+	private static final String INSERT_FIRST_BODY_ID = "Inserire l'identificativo del primo corpo celeste: ";
+	private static final String INSERT_SECOND_BODY_ID = "Inserire l'identificativo del secondo corpo celeste: ";
+	private static final String POSSIBLE_COLLISIONS = "ATTENZIONE!!! Possibili collisioni tra corpi celesti!";
+	private static final String NO_COLLISIONS = "Tutto tranquillo. Nessuna collisione rilevata.";
+	private static final String ALL_PLANETS_CANCELLED = "Tutti i pianeti e lune sono stati cancellati!";
+
 
 	public static void main(String[] args) {
 		SolarSystem system = introduction();
@@ -42,7 +61,7 @@ public class Planetarium {
 				case 3 -> infoCelestialBody(system);
 				case 4 -> showListCelestialBodies(system);
 				case 5 -> getCenterOfMass(system);
-				case 6 -> calculateRoute(system);
+				case 6 -> calculatePath(system);
 				case 7 -> showCollisions(system);
 				case 8 -> generateTest(system);
 				case 9 -> clearSystem(system);
@@ -54,7 +73,15 @@ public class Planetarium {
 			Menu.clearConsole();
 		} while (true);
 	}
-
+	
+	private static long readCelestialBodyMass(String message){
+		while(true){
+			long mass = Input.readLong(message);
+			if(mass > 0) return mass;
+			System.out.println("La massa non può essere negativa.");
+		}
+	}
+	
 	//First interaction with user.
 	private static SolarSystem introduction() {
 		Menu.clearConsole();
@@ -62,8 +89,7 @@ public class Planetarium {
 
 		double x  = Input.readDouble(INSERT_STAR_X);
 		double y  = Input.readDouble(INSERT_STAR_Y);
-		long mass = Input.readLong(INSERT_STAR_MASS);
-
+		long mass = readCelestialBodyMass(INSERT_STAR_MASS);
 		Menu.clearConsole();
 		return new SolarSystem(x, y, mass);
 	}
@@ -122,7 +148,7 @@ public class Planetarium {
 		Star star = system.getStar();
 		double x = Input.readDouble(INSERT_PLANET_X);
 		double y = Input.readDouble(INSERT_PLANET_Y);
-		long mass = Input.readLong(INSERT_PLANET_MASS);
+		long mass = readCelestialBodyMass(INSERT_PLANET_MASS);
 		star.addNewPlanet(x, y, mass);
 	}
 	//Gets values from user input and creates a new object Moon.
@@ -134,7 +160,7 @@ public class Planetarium {
 
 		while(true) {
 			try {
-				id = Input.readString("Inserire ID del pianeta della luna: ");
+				id = Input.readString(INSERT_PLANET_ID_FOR_MOON_CREATION);
 				planet = star.findPlanet(id);
 				break;
 			} catch(CelestialBodyNotFoundException e) {
@@ -144,7 +170,7 @@ public class Planetarium {
 
 		double x = Input.readDouble(INSERT_MOON_X);
 		double y = Input.readDouble(INSERT_MOON_Y);
-		long mass = Input.readLong(INSERT_MOON_MASS);
+		long mass = readCelestialBodyMass(INSERT_MOON_MASS);
 		planet.addNewMoon(x, y, mass);
 	}
 
@@ -211,7 +237,7 @@ public class Planetarium {
 	//If planet code is invalid, it will ask planet's ID again.
 	private static void removePlanet(SolarSystem system) {
 		while (true) {
-			String idPlanet = Input.readString("Inserire ID del pianeta da rimuovere: ");
+			String idPlanet = Input.readString(INSERT_PLANET_ID_TO_REMOVE);
 			try {
 				system.getStar().removeOldPlanet(idPlanet);
 				return;
@@ -224,14 +250,18 @@ public class Planetarium {
 	//If moon code is invalid, it will ask moon's ID again.
 	private static void removeMoon(SolarSystem system) {
 		while(true){
-			String idLuna = Input.readString("\nInserire ID della luna: ");
+			String idLuna = Input.readString(INSERT_MOON_ID);
 
 			try {
 				var found = (Moon)(system.findCelestialBody(idLuna));
 				found.removeFromSystem();
 				return;
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				if(e instanceof ClassCastException){
+					System.out.println(NOT_A_MOON_ID);
+				}else{
+					System.out.println(e.getMessage());
+				}
 			}
 		}
 	}
@@ -246,7 +276,7 @@ public class Planetarium {
 		Menu.clearConsole();
 
 		try {
-			var body = system.findCelestialBody(Input.readString("Inserire ID del corpo celeste: "));
+			var body = system.findCelestialBody(Input.readString(INSERT_CELESTIAL_BODY_ID));
 			System.out.printf("\n%s\n",body);
 		} catch(CelestialBodyNotFoundException e) {
 			System.out.printf("\n%s\n",e.getMessage());
@@ -269,70 +299,74 @@ public class Planetarium {
 		var star = system.getStar();
 		var planets = star.getPlanets();
 
-		System.out.println(star.getIdentifier() + "\t\t\t" + star);
+		printStar(star);
 
 		for(int i=0; i < planets.size() - 1; i++) {
 			var planet = planets.get(i);
-			System.out.println(" |__ " + planet.getIdentifier() + "\t\t" + planet);
-			var moons = planet.getMoons();
-			for(var moon : moons) {
-				System.out.println(" |      |__ " + moon.getIdentifier() + "\t" + moon);
-			}
+
+			printPlanetAndMoons(planet,false);
 			System.out.println(" |");
 		}
-		var lastPlanet = planets.isEmpty() ? null : planets.get(planets.size()-1);
-		if (lastPlanet != null) {
-			System.out.println(" |__ " + lastPlanet.getIdentifier() + "\t\t" + lastPlanet);
-			for(var moon : lastPlanet.getMoons()){
-				System.out.println("        |__ " + moon.getIdentifier() + "\t" + moon);
-			}
-		}
+
+		if (!planets.isEmpty()) printPlanetAndMoons(planets.get(planets.size()-1),true);
 	}
 
+	//Prints the star.
+	private static void printStar(Star star){
+		System.out.printf(STAR_FORMAT,star.getIdentifier(),star);
+	}
 
+	//Prints planet and its moons based on the format given.
+	private static void printPlanetAndMoons(Planet planet,boolean isLastPlanet){
+		String planetFormat = (isLastPlanet ? LAST_PLANET_FORMAT : PLANET_FORMAT);
+		String moonFormat = (isLastPlanet ? LAST_PLANET_MOON_FORMAT : MOON_FORMAT);
+
+		System.out.printf(planetFormat,planet.getIdentifier(),planet);
+		for(var moon : planet.getMoons()){
+			System.out.printf(moonFormat,moon.getIdentifier(),moon);
+		}
+	}
 
 
 	//Main Switch Case 5: calculates and prints the center of mass.
 	private static void getCenterOfMass(SolarSystem system) {
 		Position centerOfMass = system.getCenterOfMass();
 		Menu.clearConsole();
-		System.out.printf("Il centro di massa è alle coordinate ( %.3f, %.3f )\n",centerOfMass.getX(),centerOfMass.getY());
+		System.out.printf(CENTER_OF_MASS_FORMAT,centerOfMass.getX(),centerOfMass.getY());
 		Menu.pressEnterToContinue();
 	}
-
 
 
 
 	//Main Switch Case 6: prompts the user to enter the ID of the starting and ending Celestial Body.
-	private static void calculateRoute(SolarSystem system) {
+	private static void calculatePath(SolarSystem system) {
 		Menu.clearConsole();
-		String path;
-		while(true) {
-			try {
-				String id1 = Input.readString("Inserire l'identificativo del primo corpo celeste: ");
-				String id2 = Input.readString("Inserire l'identificativo del secondo corpo celeste: ");
-
-				path = system.findPath(id1, id2);
-				break;
-			} catch(PathBetweenDifferentSystemException e) {
-				System.out.println(e.getMessage());
-			}
-		}
-
+		String path = getPath(system);
 		System.out.println(path.concat("\n\n"));
 		Menu.pressEnterToContinue();
 	}
 
+	private static String getPath(SolarSystem system){
+		while(true) {
+			try {
+				String id1 = Input.readString(INSERT_FIRST_BODY_ID);
+				String id2 = Input.readString(INSERT_SECOND_BODY_ID);
 
+				return system.findPath(id1, id2);
+			} catch(PathBetweenDifferentSystemException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
 
 
 	//Main Switch Case 7: it prints if there could be collisions.
 	private static void showCollisions(SolarSystem system) {
 		Menu.clearConsole();
 		if (system.detectCollisions())
-			System.out.println("ATTENZIONE!!! Possibili collisioni tra corpi celesti!");
+			System.out.println(POSSIBLE_COLLISIONS);
 		else
-			System.out.println("Tutto tranquillo. Nessuna collisione rilevata.");
+			System.out.println(NO_COLLISIONS);
 		Menu.pressEnterToContinue();
 	}
 
@@ -390,7 +424,7 @@ public class Planetarium {
 		Menu.clearConsole();
 		final Star star = system.getStar();
 		star.removeAllPlanets();
-		System.out.println("Tutti i pianeti e lune sono stati cancellati!");
+		System.out.println(ALL_PLANETS_CANCELLED);
 		Menu.pressEnterToContinue();
 	}
 }
