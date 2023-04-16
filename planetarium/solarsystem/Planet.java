@@ -131,6 +131,11 @@ public class Planet extends CelestialBody {
      */
     public void removeFromSystem() {
         getStar().removeOldPlanet(this);
+        deleteStarReference();
+    }
+
+    //Sets the reference to its star to null, used when deleting the planet.
+    protected void deleteStarReference(){
         star = null;
     }
 

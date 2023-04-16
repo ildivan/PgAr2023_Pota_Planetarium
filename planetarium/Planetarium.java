@@ -213,7 +213,7 @@ public class Planetarium {
 		while (true) {
 			String idPlanet = Input.readString("Inserire ID del pianeta da rimuovere: ");
 			try {
-				system.getStar().findPlanet(idPlanet).removeFromSystem();
+				system.getStar().removeOldPlanet(idPlanet);
 				return;
 			} catch(CelestialBodyNotFoundException e) {
 				System.out.println(e.getMessage());
@@ -389,8 +389,7 @@ public class Planetarium {
 	private static void clearSystem(SolarSystem system){
 		Menu.clearConsole();
 		final Star star = system.getStar();
-		//Can't loop through the planets and use planet.removeFromSystem() because it calls an exception.
-		star.getPlanets().clear();
+		star.removeAllPlanets();
 		System.out.println("Tutti i pianeti e lune sono stati cancellati!");
 		Menu.pressEnterToContinue();
 	}

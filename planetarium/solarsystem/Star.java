@@ -3,8 +3,10 @@ package planetarium.solarsystem;
 import planetarium.solarsystem.error.CelestialBodyNotFoundException;
 import planetarium.solarsystem.error.PathBetweenDifferentSystemException;
 
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Represent a star, the center of its solar system.
@@ -113,12 +115,18 @@ public class Star extends CelestialBody {
      * @param identifier The identifier of the planet to be removed.
      * @see Planet
      */
-    public void removeOldPlanet(String identifier){
-        try {
-            findPlanet(identifier).removeFromSystem();
-        } catch(CelestialBodyNotFoundException ignored) {}
+    public void removeOldPlanet(String identifier) throws CelestialBodyNotFoundException{
+        findPlanet(identifier).removeFromSystem();
     }
 
+    //Removes all planets and moon of the system.
+    public void removeAllPlanets(){
+        ListIterator<Planet> iter = getPlanets().listIterator();
+        while(iter.hasNext()){
+            iter.next().deleteStarReference();
+            iter.remove();
+        }
+    }
 
     //Returns a list with the Star and the Planet as elements representing the path between them.
     protected ArrayList<CelestialBody> pathToPlanet(Planet planetToGo) throws PathBetweenDifferentSystemException {
