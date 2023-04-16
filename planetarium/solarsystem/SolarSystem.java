@@ -315,13 +315,45 @@ public class SolarSystem {
     private static String pathToString(ArrayList<CelestialBody> path) {
         if (path == null || path.isEmpty()) return "";
 
-        StringBuilder sPath = new StringBuilder(String.format("%s ", path.get(0).getIdentifier()));
+        StringBuilder sPath = new StringBuilder(String.format("\n%s ", path.get(0).getIdentifier()));
 
         for(int i = 1; i < path.size(); i++)
             sPath.append(String.format(" > %s", path.get(i).getIdentifier()));
 
+        //Appends the length of the path
+        sPath.append(String.format("\ndistanza totale : %.3f", totalDistanceOfPath(path)));
+
         return sPath.toString();
     }
+
+    //Calculates the total distance of the path between two celestial bodies.
+    private static double totalDistanceOfPath(ArrayList<CelestialBody> path) {
+        long totalDistance = 0;
+
+        for (int i = 0; i < path.size() - 1; i++) {
+            //There's not a risk of going out of bounds because path is at least two elements.
+            CelestialBody current = path.get(i);
+            CelestialBody next = path.get(i+1);
+
+            //Assuming that from a moon you can go only to its planet.
+            if(current instanceof Moon currentMoon){
+                totalDistance += currentMoon.distanceToPlanet();
+            }//Assuming that from a planet you can go to one of its moons or to its star.
+            else if(current instanceof Planet currentPlanet){
+                if(next instanceof Moon nextMoon){
+                    totalDistance += nextMoon.distanceToPlanet();
+                }else{
+                    totalDistance += currentPlanet.distanceToStar();
+                }
+            }//Assuming that from a star you can only go to one of its planets.
+            else{
+                totalDistance += ((Planet) next).distanceToStar();
+            }
+        }
+
+        return totalDistance;
+    }
+
 
     //Path between two moons.
     private ArrayList<CelestialBody> moonToMoon(Moon start, Moon end) throws PathBetweenDifferentSystemException{

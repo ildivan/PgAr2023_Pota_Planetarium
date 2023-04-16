@@ -1,7 +1,8 @@
 package planetarium.solarsystem;
 
 /**
- * Represent a celestial body, an object in the universe with an identifier, a position and a mass.
+ * Represent a celestial body, an object in the universe with an identifier, a
+ * position and a mass.
  */
 public abstract class CelestialBody {
     /**
@@ -29,11 +30,10 @@ public abstract class CelestialBody {
      */
     private final long mass;
 
-
     /**
      * Constructor for a generic celestial body.
-     * @param position The celestial body's position relative to his parent.
-     * @param mass The celestial body's mass.
+     * @param position   The celestial body's position relative to his parent.
+     * @param mass       The celestial body's mass.
      * @param identifier The unique identifier for the celestial body.
      */
     public CelestialBody(Position position, long mass, String identifier) {
@@ -44,13 +44,15 @@ public abstract class CelestialBody {
 
     /**
      * Constructor for a generic celestial body.
-     * @param x The celestial body's offset along the x-axis relative to his parent.
-     * @param y The celestial body's offset along the y-axis relative to his parent.
-     * @param mass The celestial body's mass.
+     * @param x          The celestial body's offset along the x-axis relative to
+     *                   his parent.
+     * @param y          The celestial body's offset along the y-axis relative to
+     *                   his parent.
+     * @param mass       The celestial body's mass.
      * @param identifier The unique identifier for the celestial body.
      */
     public CelestialBody(double x, double y, long mass, String identifier) {
-        this(new Position(x,y), mass, identifier);
+        this(new Position(x, y), mass, identifier);
     }
 
     /**
@@ -63,7 +65,7 @@ public abstract class CelestialBody {
 
     /**
      * Getter method for the absolute position.
-     * Gets position relative to an arbitrary origin , has to  be implemented by every subclass.
+     * Gets position relative to an arbitrary origin, has to be implemented by every subclass.
      * @return Absolute position of the celestial body.
      * @see Position
      */
@@ -92,6 +94,25 @@ public abstract class CelestialBody {
     @Override
     public String toString() {
         String className = getClass().getSimpleName();
-        return String.format("[ %s %s\tmass: %d\tposition: %s]", className, getIdentifier(), getMass(), getAbsolutePosition());
+        return String.format("[ %s: %s\t\tmass: %d\t\tposition: %s ]", className, getIdentifier(), getMass(),
+                getAbsolutePosition());
+    }
+
+    /**
+    * To string method for celestial bodies, does not include the Id of the bodies.
+    * @return The celestial body's information in a readable way but without the Identifier.
+    */
+    public String toStringWithoutID() {
+        String className = getClass().getSimpleName();
+        String tabsToAlignName = "\t\t";
+        String tabsToAlignMass = "\t";
+
+        if (this instanceof Planet)
+            tabsToAlignName = "\t";
+        if (getMass() < 10)
+            tabsToAlignMass = "\t\t";
+            
+        return String.format("[ %s%smass: %d%sposition: %s ]", className, tabsToAlignName, getMass(), tabsToAlignMass,
+                getAbsolutePosition());
     }
 }

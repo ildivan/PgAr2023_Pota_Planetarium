@@ -6,9 +6,9 @@ public class Menu {
 	// Different frame for Windows user
 	private static String getFrame() {
 		if (IS_WINDOWS)
-			return "----------------------------------------------------------";
+			return "-------------------------------------------------------------------------------------------------";
 		else
-			return "――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
+			return "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
 	}
 
 	// Title UNICODE Art
@@ -33,9 +33,8 @@ public class Menu {
 		System.out.println("	5. Ottieni il centro di massa");
 		System.out.println("	6. Calcola rotta tra due corpi");
 		System.out.println("	7. Mostra possibili collisioni");
-		System.out.println("	8. Genera randomicamente Pianeti e lune (Test)");
-		System.out.println("	9. Pulisci il sistema, elimina tutti i Pianeti e Lune");
-		System.out.println("	10. Esci");
+		System.out.println("	8. Genera randomicamente Pianeti e lune (Test) [Attenzione: il sistema verrà pulito!]");
+		System.out.println("	9. Esci");
 	}
 
 	// Menu for adding celestial bodies in case there are no planets yet.
