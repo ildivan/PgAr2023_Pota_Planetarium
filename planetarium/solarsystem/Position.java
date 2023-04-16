@@ -65,13 +65,12 @@ public class Position {
     /**
      * Shorthand for adding two positions.
      * Similar to vector sum.
+     *
      * @param amount The position to be added.
-     * @return Self reference.
      */
-    public Position increase(Position amount) {
+    public void increase(Position amount) {
         increaseX(amount.getX());
         increaseY(amount.getY());
-        return this;
     }
 
     /**

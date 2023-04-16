@@ -67,7 +67,7 @@ public class Planet extends CelestialBody {
     /**
      * Given an identifier, it searches for a moon around the planet with the same identifier.
      * WARNING: It does not search for moons on another planets!
-     * WARNING: Acelestial body that is not a planet will not be found given its  identifier.
+     * WARNING: A celestial body that is not a planet will not be found given its  identifier.
      * @param identifier The identifier of the moon we are searching
      * @return The instance of the moon searched. May throw CelestialBodyNotFoundException if the moon is not found.
      * @see Moon
