@@ -45,7 +45,8 @@ public class Planetarium {
 				case 6 -> calculateRoute(system);
 				case 7 -> showCollisions(system);
 				case 8 -> generateTest(system);
-				case 9 -> {
+				case 9 -> clearSystem(system);
+				case 10 -> {
 					return;
 				}
 				default -> System.out.println(INVALID_NUMBER);
@@ -373,14 +374,24 @@ public class Planetarium {
 	private static void generateTestCelestialBodies(CelestialBody parent, int numberOfBodiesToGenerate){
 		Random random = new Random();
 
-		int maxVal = (parent instanceof Star ? 100000 : 1000);
+		int maxVal = (parent instanceof Star ? 200000 : 10000);
 
 		for (int i=0; i<numberOfBodiesToGenerate; i++) {
-			double x = random.nextDouble()*maxVal;
-			double y = random.nextDouble()*maxVal;
+			double x = (random.nextBoolean() ? 1.0 : -1.0) * random.nextDouble()*maxVal;
+			double y = (random.nextBoolean() ? 1.0 : -1.0) * random.nextDouble()*maxVal;
 			long mass = Math.abs(random.nextLong()%maxVal + 1);
 			if(parent instanceof Star star) star.addNewPlanet(x, y, mass);
 			else if(parent instanceof Planet planet) planet.addNewMoon(x, y, mass);
 		}
+	}
+
+	//Main switch case 9: deletes all planets and moons (identifiers are not reset)
+	private static void clearSystem(SolarSystem system){
+		Menu.clearConsole();
+		final Star star = system.getStar();
+		//Can't loop through the planets and use planet.removeFromSystem() because it calls an exception.
+		star.getPlanets().clear();
+		System.out.println("Tutti i pianeti e lune sono stati cancellati!");
+		Menu.pressEnterToContinue();
 	}
 }

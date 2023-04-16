@@ -34,9 +34,12 @@ public class Menu {
 		System.out.println("	6. Calcola rotta tra due corpi");
 		System.out.println("	7. Mostra possibili collisioni");
 		System.out.println("	8. Genera randomicamente Pianeti e lune (Test)");
-		System.out.println("	9. Esci");
+		System.out.println("	9. Pulisci il sistema, elimina tutti i Pianeti e Lune");
+		System.out.println("	10. Esci");
 	}
 
+	// Menu for adding celestial bodies in case there are no planets yet.
+	// (it blocks you from creating a moon without a planet)
 	protected static void printAddPlanetMenu(){
 		clearConsole();
 		System.out.println(getFrame());
@@ -83,14 +86,14 @@ public class Menu {
 				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 			else
 				new ProcessBuilder("bash", "-c", "clear").inheritIO().start().waitFor();
-		} catch (Exception e) {}
+		} catch (Exception ignored) {}
 	}
 
 	// Wait for the user to type enter
 	protected static void pressEnterToContinue() {
 		System.out.print("\n\nPremi Invio per continuare...");
 		try {
-			System.in.read();
+			var ignored = System.in.read();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
