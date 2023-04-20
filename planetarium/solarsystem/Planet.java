@@ -8,8 +8,7 @@ import java.util.List;
 /**
  * Represents a planet that orbits a star.
  */
-public class Planet extends CelestialBody {
-    private Star star;
+public class Planet extends Satellite {
     private final List<Moon> moons;
     private int numberOfMoons = 0;
 
@@ -20,22 +19,13 @@ public class Planet extends CelestialBody {
 
     //Protected because it should be instantiated ONLY from a Star object's appropriate method.
     Planet(Position planetPosition, long planetMass, Star star) {
-        super(planetPosition, planetMass, star.getIdentifier() + "P" + (star.getNumberOfPlanets() + 1));
-        this.star = star;
+        super(planetPosition, planetMass, star.getIdentifier() + "P" + (star.getNumberOfPlanets() + 1),star);
         moons = new ArrayList<>();
     }
 
     //Protected because it should be instantiated ONLY from a Star object's appropriate method.
     protected Planet(double x, double y, long planetMass, Star star) {
         this(new Position(x,y), planetMass, star);
-    }
-
-    /**
-     * Getter method for the star the planet orbits around.
-     * @return The star which the planet orbits.
-     */
-    public Star getStar() {
-        return star;
     }
 
     /**
@@ -46,7 +36,7 @@ public class Planet extends CelestialBody {
     @Override
     public Position getAbsolutePosition() {
         Position absolutePosition = getRelativePosition();
-        absolutePosition.increase(getStar().getAbsolutePosition());
+        absolutePosition.increase(getParent().getAbsolutePosition());
         return absolutePosition;
     }
 
@@ -74,7 +64,7 @@ public class Planet extends CelestialBody {
      * @see CelestialBodyNotFoundException
      */
     public Moon findMoon(String identifier) throws CelestialBodyNotFoundException{
-        for(var moon : getMoons()){
+        for(Moon moon : getMoons()){
             if(identifier.equals(moon.getIdentifier())){
                 return moon;
             }
@@ -113,57 +103,18 @@ public class Planet extends CelestialBody {
         moons.remove(moonToDelete);
     }
 
-    /**
-     * Removes a moon orbiting the planet given an identifier.
-     * WARNING: If the identifier corresponds to a moon of another planet, the moon will not be deleted.
-     * @param identifier The identifier of the moon to be removed.
-     * @see Moon
-     */
-    public void removeOldMoon(String identifier) throws CelestialBodyNotFoundException{
-        Moon moonToDelete = findMoon(identifier);
-        moonToDelete.removeFromSystem();
-    }
 
     /**
      * Removes the planet from its solar system, and does it from the planet's instance.
      */
     public void removeFromSystem() {
-        getStar().removeOldPlanet(this);
+        ((Star)getParent()).removeOldPlanet(this);
         deleteStarReference();
     }
 
     //Sets the reference to its star to null, used when deleting the planet.
     protected void deleteStarReference(){
-        star = null;
+        parent = new Star(0,0,0);
     }
 
-    /**
-     * Calculates the distance from the planet to its star, equivalently its orbiting radius.
-     * @return The distance from the planet to its star.
-     * @see Star
-     */
-    public double distanceToStar() {
-        Position relative = getRelativePosition();
-        return Math.sqrt( Math.pow(relative.getX(), 2) + Math.pow(relative.getY(), 2) );
-    }
-
-
-    //Returns a list with the Planet and its Star as elements.
-    protected ArrayList<CelestialBody> pathToStar() {
-        var path = new ArrayList<CelestialBody>();
-        path.add(this);
-        path.add(getStar());
-        return path;
-    }
-
-    //Returns a list with the Planet and the Moon as elements, throw exception if the moon does not orbit the planet.
-    protected ArrayList<CelestialBody> pathToMoon(Moon moonToGo) throws CelestialBodyNotFoundException{
-        if(!moonToGo.getPlanet().getIdentifier().equals(getIdentifier()))
-            throw new CelestialBodyNotFoundException(moonToGo);
-
-        var path = new ArrayList<CelestialBody>();
-        path.add(this);
-        path.add(moonToGo);
-        return path;
-    }
 }

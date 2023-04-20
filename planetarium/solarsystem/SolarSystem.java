@@ -1,10 +1,11 @@
 package planetarium.solarsystem;
 
 import planetarium.solarsystem.error.CelestialBodyNotFoundException;
-import planetarium.solarsystem.error.PathBetweenDifferentSystemException;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *  Represent a solar system : a star, his planets and the planets moons.
@@ -54,26 +55,26 @@ public class SolarSystem {
      * @see Position
      */
     public Position getCenterOfMass() {
-        final long systemMass = getSystemTotalMass();
-        final Position centerOfMass = new Position(0, 0);
+        long systemMass = getSystemTotalMass();
+        Position centerOfMass = new Position(0, 0);
 
         // Add weighted position of the Star
-        final double starMass = getStar().getMass();
-        final Position adjustedStarPosition = getStar().getAbsolutePosition().multiplyBy(starMass);
+        double starMass = getStar().getMass();
+        Position adjustedStarPosition = getStar().getAbsolutePosition().multiplyBy(starMass);
         centerOfMass.increase(adjustedStarPosition);
 
         // Add weighted positions of the Planets
-        final var planets = getStar().getPlanets();
-        for(final var planet : planets) {
-            final double planetMass = planet.getMass();
-            final Position adjustedPlanetPosition = planet.getAbsolutePosition().multiplyBy(planetMass);
+        List<Planet> planets = getStar().getPlanets();
+        for(Planet planet : planets) {
+            double planetMass = planet.getMass();
+            Position adjustedPlanetPosition = planet.getAbsolutePosition().multiplyBy(planetMass);
             centerOfMass.increase(adjustedPlanetPosition);
 
-            final var moons = planet.getMoons();
+            List<Moon> moons = planet.getMoons();
             // Add weighted positions of the Moons for every Planet
-            for(final var moon : moons) {
-                final double moonMass = moon.getMass();
-                final Position adjustedMoonPosition = moon.getAbsolutePosition().multiplyBy(moonMass);
+            for(Moon moon : moons) {
+                double moonMass = moon.getMass();
+                Position adjustedMoonPosition = moon.getAbsolutePosition().multiplyBy(moonMass);
                 centerOfMass.increase(adjustedMoonPosition);
             }
         }
@@ -89,15 +90,15 @@ public class SolarSystem {
         // Star mass as starting mass
         long totalMass = getStar().getMass();
 
-        final var planets = getStar().getPlanets();
+        List<Planet> planets = getStar().getPlanets();
 
         // Add mass of all the planets and their moons to the total
-        for (final var planet: planets) {
+        for (Planet planet: planets) {
             totalMass += planet.getMass();
 
             // Add mass of all the moons of the planet to the total
-            final var moons = planet.getMoons();
-            for(final var moon : moons)
+            List<Moon> moons = planet.getMoons();
+            for(Moon moon : moons)
                 totalMass += moon.getMass();
         }
 
@@ -112,14 +113,14 @@ public class SolarSystem {
      * @see CelestialBody
      */
     public CelestialBody findCelestialBody(String identifier) throws CelestialBodyNotFoundException {
-        final var star = getStar();
+        Star star = getStar();
         if(identifier.equals(star.getIdentifier()))
             return star;
 
         try {
             return star.findPlanet(identifier);
         } catch(CelestialBodyNotFoundException planetNotFound) {
-            for(final Planet planet : star.getPlanets()) {
+            for(Planet planet : star.getPlanets()) {
                 try {
                     return planet.findMoon(identifier);
                 } catch(CelestialBodyNotFoundException ignored) {}
@@ -143,11 +144,11 @@ public class SolarSystem {
     //Check collisions between planets
     //Returns true if found
     private boolean checkCollisionBetweenPlanets() {
-        final var planets = getStar().getPlanets();
+        List<Planet> planets = getStar().getPlanets();
         ArrayList<Double> distancesFromStar = new ArrayList<>();
 
-        for(final Planet planet : planets) {
-            double distance = planet.distanceToStar();
+        for(Planet planet : planets) {
+            double distance = planet.distanceToParent();
             if(distancesFromStar.contains(distance))
                 return true;
 
@@ -159,12 +160,12 @@ public class SolarSystem {
     //Check collisions of moons with the star
     //Returns true if found
     private boolean checkCollisionStarAndMoons() {
-        final var planets = getStar().getPlanets();
+        List<Planet> planets = getStar().getPlanets();
 
-        for(final Planet planet : planets) {
-            final var moons = planet.getMoons();
-            for(final Moon moon : moons) {
-                if(planet.distanceToStar() <= moon.distanceToPlanet())
+        for(Planet planet : planets) {
+            List<Moon> moons = planet.getMoons();
+            for(Moon moon : moons) {
+                if(planet.distanceToParent() <= moon.distanceToParent())
                     return true;
             }
         }
@@ -175,19 +176,19 @@ public class SolarSystem {
     //Check collisions within moons.
     //Returns true if found
     private boolean checkCollisionsBetweenMoons() {
-        final var planets = getStar().getPlanets();
+        List<Planet> planets = getStar().getPlanets();
 
         for (int i = 0; i < planets.size(); i++) {
             for (int j = i; j < planets.size(); j++) {
-                final Planet first = planets.get(i);
-                final Planet second = planets.get(j);
+                Planet first = planets.get(i);
+                Planet second = planets.get(j);
 
-                final var firstMoons = first.getMoons();
-                final var secondMoons = second.getMoons();
+                List<Moon> firstMoons = first.getMoons();
+                List<Moon> secondMoons = second.getMoons();
 
-                for (int k = 0; k < firstMoons.size(); k++) {
-                    for (int l = 0; l < secondMoons.size(); l++) {
-                        if(canMoonsCollide(firstMoons.get(i),secondMoons.get(j))){
+                for (Moon firstMoon : firstMoons) {
+                    for (Moon secondMoon : secondMoons) {
+                        if(canMoonsCollide(firstMoon,secondMoon)){
                             return true;
                         }
                     }
@@ -200,33 +201,34 @@ public class SolarSystem {
     //Checks if two moons can collide
     private boolean canMoonsCollide(Moon first, Moon second){
         //If the two moons are from the same planet they collide if they have the same orbiting radius.
-        if(first.getPlanet() == second.getPlanet()){
-            return (first.distanceToPlanet() == second.distanceToPlanet());
+        if(first.getParent() == second.getParent()){
+            return (first.distanceToParent() == second.distanceToParent());
         }
 
-        final Planet firstPlanet = first.getPlanet();
-        final Planet secondPlanet = second.getPlanet();
+        final Planet firstPlanet = (Planet)first.getParent();
+        final Planet secondPlanet = (Planet)second.getParent();
         //equivalent of the distance between the two planets if they are aligned in their orbits.
-        final double distanceToStarDifference = Math.abs( firstPlanet.distanceToStar() - secondPlanet.distanceToStar() );
+        final double distanceToStarDifference =
+                Math.abs( firstPlanet.distanceToParent() - secondPlanet.distanceToParent() );
 
-        return (first.distanceToPlanet() + second.distanceToPlanet() >= distanceToStarDifference);
+        return (first.distanceToParent() + second.distanceToParent() >= distanceToStarDifference);
     }
 
     //Checks collisions within planets and moons of other planets
     //Returns true if found
     private boolean checkCollisionPlanetsAndMoons() {
-        final var planets = getStar().getPlanets();
+        final List<Planet> planets = getStar().getPlanets();
 
-        for (final Planet firstPlanet: planets) {
-            for (final Planet otherPlanet : planets) {
-                final var otherPlanetMoons = otherPlanet.getMoons();
+        for (Planet firstPlanet: planets) {
+            for (Planet otherPlanet : planets) {
+                final List<Moon> otherPlanetMoons = otherPlanet.getMoons();
 
                 //Distance between the two planets if they were aligned in their orbits.
                 final double distanceToStarDifference =
-                        Math.abs(firstPlanet.distanceToStar() - otherPlanet.distanceToStar());
+                        Math.abs(firstPlanet.distanceToParent() - otherPlanet.distanceToParent());
 
-                for (final Moon moon : otherPlanetMoons) {
-                    if (moon.distanceToPlanet() >= distanceToStarDifference)
+                for (Moon moon : otherPlanetMoons) {
+                    if (moon.distanceToParent() >= distanceToStarDifference)
                         return true;
                 }
             }
@@ -246,173 +248,37 @@ public class SolarSystem {
      * " S1P1 > S1 > S1P2 "
      * @param startIdentifier Identifier of the celestial body at the start of the  path.
      * @param endIdentifier Identifier of the celestial body at the end of the path.
-     * @return <p>A string that represents the path between the two celestial bodies.
-     * May throw PathBetweenDifferentSolarSystem if the two celestial bodies do not belong to the same system</p>
+     * @return <p>A list that represents the path between the two celestial bodies.
+     * May throw CelestialBodyNotFoundException if either of the two celestial bodies are not found in the system</p>
      */
-    public String findPath(String startIdentifier,String endIdentifier) throws PathBetweenDifferentSystemException {
-        final CelestialBody start;
-        final CelestialBody end;
-        try {
-            start = findCelestialBody(startIdentifier);
-            end = findCelestialBody(endIdentifier);
-        } catch(CelestialBodyNotFoundException e) {
-            return e.getMessage();
-        }
+    public List<CelestialBody> findPath(String startIdentifier,String endIdentifier) throws CelestialBodyNotFoundException {
+        CelestialBody start = findCelestialBody(startIdentifier);
+        CelestialBody end = findCelestialBody(endIdentifier);
 
         //Check if the start and end are the same.
         if(startIdentifier.equals(endIdentifier))
-            return "No path required.";
+            return new ArrayList<>();
 
-        //Casts the start into its specific type of CelestialBody and calls the appropriate method.
-        if(start instanceof Moon startMoon){
-            return pathFromMoon(startMoon,end);
-        }
-        if (start instanceof Planet startPlanet){
-            return pathFromPlanet(startPlanet,end);
-        }
-        return pathFromStar((Star) start, end);
-    }
+        LinkedList<CelestialBody> fromStart = new LinkedList<>();
+        LinkedList<CelestialBody> fromEnd = new LinkedList<>();
+        fromStart.add(start);
+        fromEnd.add(end);
 
-
-
-    //Method used for all the paths that starts from a moon.
-    private String pathFromMoon(Moon start, CelestialBody end) throws PathBetweenDifferentSystemException{
-        if(end instanceof Moon endMoon){
-            return pathToString(moonToMoon(start,endMoon));
-        }
-        if (end instanceof Planet endPlanet){
-            return pathToString(moonToPlanet(start,endPlanet));
-        }
-        return pathToString(moonToStar(start,(Star)end));
-    }
-    //Method used for all the paths that starts from a planet.
-    private String pathFromPlanet(Planet start, CelestialBody end) throws PathBetweenDifferentSystemException{
-        if(end instanceof Moon endMoon){
-            return pathToString(planetToMoon(start,endMoon));
-        }
-        if (end instanceof Planet endPlanet){
-            return pathToString(planetToPlanet(start,endPlanet));
-        }
-        return pathToString(planetToStar(start,(Star)end));
-
-    }
-    //Method used for all the paths that starts from a star.
-    private String pathFromStar(Star start, CelestialBody end) throws PathBetweenDifferentSystemException{
-        if (end instanceof Moon endMoon){
-            return pathToString(starToMoon(start,endMoon));
-        }
-        if (end instanceof Planet endPlanet){
-            return pathToString(starToPlanet(start,endPlanet));
-        }
-        //The only case not covered is the path between two stars, and it throws an exception in that case.
-        throw new PathBetweenDifferentSystemException(start,end);
-    }
-
-
-
-    //Converts list of celestial bodies to a string representing a path.
-    //Does not check if the path makes sense, that is up to the methods that creates it.
-    private static String pathToString(ArrayList<CelestialBody> path) {
-        if (path == null || path.isEmpty()) return "";
-
-        StringBuilder sPath = new StringBuilder(String.format("\n%s ", path.get(0).getIdentifier()));
-
-        for(int i = 1; i < path.size(); i++)
-            sPath.append(String.format(" > %s", path.get(i).getIdentifier()));
-
-        //Appends the length of the path
-        sPath.append(String.format("\ndistanza totale : %.3f", totalDistanceOfPath(path)));
-
-        return sPath.toString();
-    }
-
-    //Calculates the total distance of the path between two celestial bodies.
-    private static double totalDistanceOfPath(ArrayList<CelestialBody> path) {
-        long totalDistance = 0;
-
-        for (int i = 0; i < path.size() - 1; i++) {
-            //There's not a risk of going out of bounds because path is at least two elements.
-            CelestialBody current = path.get(i);
-            CelestialBody next = path.get(i+1);
-
-            //Assuming that from a moon you can go only to its planet.
-            if(current instanceof Moon currentMoon){
-                totalDistance += currentMoon.distanceToPlanet();
-            }//Assuming that from a planet you can go to one of its moons or to its star.
-            else if(current instanceof Planet currentPlanet){
-                if(next instanceof Moon nextMoon){
-                    totalDistance += nextMoon.distanceToPlanet();
-                }else{
-                    totalDistance += currentPlanet.distanceToStar();
-                }
-            }//Assuming that from a star you can only go to one of its planets.
-            else{
-                totalDistance += ((Planet) next).distanceToStar();
+        //While common parent not found
+        while(fromStart.getFirst() != fromEnd.getFirst()){
+            //Checks if the current bodies are satellites.
+            //If true, add the parents to the linked lists.
+            if(fromStart.getFirst() instanceof Satellite){
+                fromStart.push(((Satellite) fromStart.getFirst()).getParent());
+            }
+            if(fromEnd.getFirst() instanceof Satellite){
+                fromEnd.push(((Satellite) fromEnd.getFirst()).getParent());
             }
         }
 
-        return totalDistance;
-    }
-
-
-    //Path between two moons.
-    private ArrayList<CelestialBody> moonToMoon(Moon start, Moon end) throws PathBetweenDifferentSystemException{
-        var path = moonToPlanet(start,end.getPlanet());
-        path.add(end);
-        return path;
-    }
-
-    //Path from a moon to a planet, the reverse of the path from the planet to the moon.
-    private ArrayList<CelestialBody> moonToPlanet(Moon start, Planet end) throws PathBetweenDifferentSystemException{
-        var path = planetToMoon(end,start);
-        Collections.reverse(path);
-        return path;
-    }
-
-    //Path from a moon to a star, the reverse of the path from the star to the moon.
-    private ArrayList<CelestialBody> moonToStar(Moon start, Star end) throws PathBetweenDifferentSystemException{
-        var path = starToMoon(end,start);
-        Collections.reverse(path);
-        return path;
-    }
-
-    //Path from a planet to a moon.
-    private ArrayList<CelestialBody> planetToMoon(Planet start, Moon end) throws PathBetweenDifferentSystemException{
-        try {
-            return start.pathToMoon(end);
-        } catch(CelestialBodyNotFoundException e) {
-            //Only executed if the moon does not orbit the planet
-            var path = planetToPlanet(start,end.getPlanet());
-            path.add(end);
-            return path;
-        }
-
-    }
-
-    //Path between two planets.
-    private ArrayList<CelestialBody> planetToPlanet(Planet start, Planet end) throws PathBetweenDifferentSystemException{
-        var path = planetToStar(start,end.getStar());
-        path.add(end);
-        return path;
-    }
-
-    //Path from a planet to a star.
-    private ArrayList<CelestialBody> planetToStar(Planet start, Star end) throws PathBetweenDifferentSystemException{
-        var path = starToPlanet(end,start);
-        Collections.reverse(path);
-        return path;
-    }
-
-    //Path from a star to a moon.
-    private ArrayList<CelestialBody> starToMoon(Star start, Moon end) throws PathBetweenDifferentSystemException {
-        var path = start.pathToPlanet(end.getPlanet());
-        path.add(end);
-        return path;
-    }
-
-    //Path from a star to a planet.
-    private ArrayList<CelestialBody> starToPlanet(Star start, Planet end) throws PathBetweenDifferentSystemException{
-        return start.pathToPlanet(end);
+        Collections.reverse(fromStart);
+        fromStart.addAll(fromEnd);
+        return fromStart;
     }
 
 }

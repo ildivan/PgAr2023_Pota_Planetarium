@@ -54,13 +54,13 @@ public class Position {
      * Shorthand for increasing the x coordinate by some value.
      * @param amount The amount to add to the current x coordinate.
      */
-    public void increaseX(double amount) { setX(getX() + amount); }
+    public void increaseX(double amount) { x += amount; }
 
     /**
      * Shorthand for increasing the y coordinate by some value.
      * @param amount The amount to add to the current y coordinate.
      */
-    public void increaseY(double amount) { setY(getY() + amount); }
+    public void increaseY(double amount) { y += amount; }
 
     /**
      * Shorthand for adding two positions.
@@ -69,8 +69,8 @@ public class Position {
      * @param amount The position to be added.
      */
     public void increase(Position amount) {
-        increaseX(amount.getX());
-        increaseY(amount.getY());
+        x += amount.getX();
+        y += amount.getY();
     }
 
     /**
@@ -79,8 +79,8 @@ public class Position {
      * @return Self reference.
      */
     public Position multiplyBy(double amount) {
-        setX(getX()*amount);
-        setY(getY()*amount);
+        x *= amount;
+        y *= amount;
         return this;
     }
 
@@ -91,8 +91,8 @@ public class Position {
      * @return Self reference.
      */
     public Position multiplyBy(double amountX, double amountY) {
-        setX(getX()*amountX);
-        setY(getY()*amountY);
+        x *= amountX;
+        y *= amountY;
         return this;
     }
 
@@ -103,6 +103,6 @@ public class Position {
      */
     @Override
     public String toString() {
-        return String.format("( %.3f , %.3f )", getX(), getY());
+        return String.format("( %.3f , %.3f )", x, y);
     }
 }

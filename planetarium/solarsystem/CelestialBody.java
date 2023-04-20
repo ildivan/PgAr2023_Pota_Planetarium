@@ -23,7 +23,7 @@ public abstract class CelestialBody {
      * @see Planet
      * @see Moon
      */
-    private final Position position;
+    protected final Position position;
 
     /**
      * The celestial body's mass.
@@ -53,14 +53,6 @@ public abstract class CelestialBody {
      */
     public CelestialBody(double x, double y, long mass, String identifier) {
         this(new Position(x, y), mass, identifier);
-    }
-
-    /**
-     * Getter method for the position of the celestial body relative to his parent.
-     * @return The relative position of the celestial body.
-     */
-    public Position getRelativePosition() {
-        return new Position(position.getX(), position.getY());
     }
 
     /**

@@ -1,17 +1,13 @@
 package planetarium.solarsystem;
 
-import java.util.ArrayList;
-
 /**
  * Represents a moon that orbits around a planet.
  */
-public class Moon extends CelestialBody {
-    private Planet planet;
+public class Moon extends Satellite {
 
     //Protected because it should be instantiated ONLY from a Planet object's appropriate method.
     protected Moon(Position moonPosition, long moonMass, Planet planet) {
-        super(moonPosition, moonMass, planet.getIdentifier() + "M" + (planet.getNumberOfMoons() + 1));
-        this.planet = planet;
+        super(moonPosition, moonMass, planet.getIdentifier() + "M" + (planet.getNumberOfMoons() + 1), planet);
     }
 
     //Protected because it should be instantiated ONLY from a Planet object's appropriate method.
@@ -27,42 +23,17 @@ public class Moon extends CelestialBody {
     @Override
     public Position getAbsolutePosition() {
         Position absolutePosition = getRelativePosition();
-        absolutePosition.increase(getPlanet().getAbsolutePosition());
+        absolutePosition.increase(getParent().getAbsolutePosition());
         return absolutePosition;
-    }
-
-    /**
-     * Getter method for the planet the moon orbits around.
-     * @return The planet which the moon orbits.
-     */
-    public Planet getPlanet() {
-        return planet;
     }
 
     /**
      * Removes a moon from its solar system, and does it from the moon instance.
      */
     public void removeFromSystem() {
-        getPlanet().removeOldMoon(this);
-        planet = null;
+        ((Planet)getParent()).removeOldMoon(this);
+        parent = new Planet(0,0,0,new Star(0,0,0));
     }
 
-    /**
-     * Calculates the distance from the moon to its planet, equivalently its orbiting radius.
-     * @return The distance from the moon to its planet.
-     * @see Planet
-     */
-    public double distanceToPlanet() {
-        Position relative = getRelativePosition();
-        return Math.sqrt( Math.pow(relative.getX(), 2) + Math.pow(relative.getY(), 2) );
-    }
-
-    //Returns a list with the Moon and its  Planet as elements.
-    protected ArrayList<CelestialBody> pathToPlanet() {
-        var path = new ArrayList<CelestialBody>();
-        path.add(this);
-        path.add(getPlanet());
-        return path;
-    }
 
 }

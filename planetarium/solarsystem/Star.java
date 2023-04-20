@@ -1,7 +1,6 @@
 package planetarium.solarsystem;
 
 import planetarium.solarsystem.error.CelestialBodyNotFoundException;
-import planetarium.solarsystem.error.PathBetweenDifferentSystemException;
 
 
 import java.util.ArrayList;
@@ -35,14 +34,12 @@ public class Star extends CelestialBody {
 
     /**
      * Getter method for the absolute position of the star.
-     * @return Returns the position of the star relaltive to an arbitrary origin,
-     * equivalent to {@link CelestialBody#getRelativePosition()}.
-     * @see CelestialBody#getRelativePosition()
+     * @return Returns the position of the star relative to an arbitrary origin,
      * @see Position
      */
     @Override
     public Position getAbsolutePosition() {
-        return getRelativePosition();
+        return new Position(position.getX(), position.getY());
     }
 
     /**
@@ -70,7 +67,7 @@ public class Star extends CelestialBody {
      * @see CelestialBodyNotFoundException
      */
     public Planet findPlanet(String identifier) throws CelestialBodyNotFoundException{
-        for(var planet : getPlanets()){
+        for(Planet planet : getPlanets()){
             if(identifier.equals(planet.getIdentifier())){
                 return planet;
             }
@@ -109,15 +106,6 @@ public class Star extends CelestialBody {
         planets.remove(planetToRemove);
     }
 
-    /**
-     * Removes a planet orbiting the star given an identifier.
-     * WARNING: If the identifier corresponds to a planet of another star, the planet will not be deleted.
-     * @param identifier The identifier of the planet to be removed.
-     * @see Planet
-     */
-    public void removeOldPlanet(String identifier) throws CelestialBodyNotFoundException{
-        findPlanet(identifier).removeFromSystem();
-    }
 
     //Removes all planets and moon of the system.
     public void removeAllPlanets(){
@@ -128,14 +116,5 @@ public class Star extends CelestialBody {
         }
     }
 
-    //Returns a list with the Star and the Planet as elements representing the path between them.
-    protected ArrayList<CelestialBody> pathToPlanet(Planet planetToGo) throws PathBetweenDifferentSystemException {
-        if(!planetToGo.getStar().getIdentifier().equals(getIdentifier()))
-            throw new PathBetweenDifferentSystemException(this,planetToGo);
 
-        var path = new ArrayList<CelestialBody>();
-        path.add(this);
-        path.add(planetToGo);
-        return path;
-    }
 }

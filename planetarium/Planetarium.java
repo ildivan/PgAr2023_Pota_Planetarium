@@ -2,8 +2,9 @@ package planetarium;
 
 import planetarium.solarsystem.*;
 import planetarium.solarsystem.error.CelestialBodyNotFoundException;
-import planetarium.solarsystem.error.PathBetweenDifferentSystemException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Planetarium {
@@ -200,7 +201,7 @@ public class Planetarium {
 		while (true) {
 			String idPlanet = Input.readString(Literals.INSERT_PLANET_ID_TO_REMOVE);
 			try {
-				system.getStar().removeOldPlanet(idPlanet);
+				system.getStar().findPlanet(idPlanet).removeFromSystem();
 				return;
 			} catch(CelestialBodyNotFoundException e) {
 				System.out.println(e.getMessage());
@@ -271,12 +272,10 @@ public class Planetarium {
 
 		if (!planets.isEmpty()) printPlanetAndMoons(planets.get(planets.size()-1),true);
 	}
-
 	//Prints the star.
 	private static void printStar(Star star){
 		System.out.printf(Literals.STAR_FORMAT,star.getIdentifier(),star.toStringWithoutID());
 	}
-
 	//Prints planet and its moons based on the format given.
 	private static void printPlanetAndMoons(Planet planet,boolean isLastPlanet){
 		String planetFormat = (isLastPlanet ? Literals.LAST_PLANET_FORMAT : Literals.PLANET_FORMAT);
@@ -287,6 +286,7 @@ public class Planetarium {
 			System.out.printf(moonFormat,moon.getIdentifier(),moon.toStringWithoutID());
 		}
 	}
+
 
 
 	//Main Switch Case 5: calculates and prints the center of mass.
@@ -313,8 +313,8 @@ public class Planetarium {
 				String id1 = Input.readString(Literals.INSERT_FIRST_BODY_ID);
 				String id2 = Input.readString(Literals.INSERT_SECOND_BODY_ID);
 
-				return system.findPath(id1, id2);
-			} catch(PathBetweenDifferentSystemException e) {
+				return pathToString(system.findPath(id1, id2));
+			} catch(CelestialBodyNotFoundException e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -390,5 +390,49 @@ public class Planetarium {
 		star.removeAllPlanets();
 		System.out.println(Literals.ALL_PLANETS_CANCELLED);
 		Menu.pressEnterToContinue();
+	}
+
+	//Converts list of celestial bodies to a string representing a path.
+	//Does not check if the path makes sense, that is up to the methods that creates it.
+	private static String pathToString(List<CelestialBody> path) {
+		if (path == null || path.isEmpty()) return "";
+
+		StringBuilder sPath = new StringBuilder(String.format("\n%s ", path.get(0).getIdentifier()));
+
+		for(int i = 1; i < path.size(); i++)
+			sPath.append(String.format(" > %s", path.get(i).getIdentifier()));
+
+		//Appends the length of the path
+		sPath.append(String.format("\ndistanza totale : %.3f", totalDistanceOfPath(path)));
+
+		return sPath.toString();
+	}
+
+	//Calculates the total distance of the path between two celestial bodies.
+	private static double totalDistanceOfPath(List<CelestialBody> path) {
+		long totalDistance = 0;
+
+		for (int i = 0; i < path.size() - 1; i++) {
+			//There's not a risk of going out of bounds because path is at least two elements.
+			CelestialBody current = path.get(i);
+			CelestialBody next = path.get(i+1);
+
+			//Assuming that from a moon you can go only to its planet.
+			if(current instanceof Moon currentMoon){
+				totalDistance += currentMoon.distanceToParent();
+			}//Assuming that from a planet you can go to one of its moons or to its star.
+			else if(current instanceof Planet currentPlanet){
+				if(next instanceof Moon nextMoon){
+					totalDistance += nextMoon.distanceToParent();
+				}else{
+					totalDistance += currentPlanet.distanceToParent();
+				}
+			}//Assuming that from a star you can only go to one of its planets.
+			else{
+				totalDistance += ((Planet) next).distanceToParent();
+			}
+		}
+
+		return totalDistance;
 	}
 }
